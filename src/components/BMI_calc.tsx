@@ -4,27 +4,35 @@ interface ChildProps {
     name:string, 
     gender: boolean, 
     height: number, 
-    weight: number
+    weight: number,
+    currField: number
 }
 
-const initialState = {
-    name: '', 
-    gender: true, 
-    height: null, 
-    weight: null
+interface ComponentState {
+    name:string, 
+    gender: boolean, 
+    height: number, 
+    weight: number,
+    currField: number
 }
 
-class BMICalc extends Component<ChildProps, {}>{
+class BMICalc extends Component<ChildProps, ComponentState>{
     constructor(props: ChildProps) {
         super(props);
-        this.state = initialState;
+        this.state = {
+            name: this.props.name, 
+            gender: this.props.gender, 
+            height: this.props.height, 
+            weight: this.props.weight, 
+            currField: this.props.currField
+        };
         this.onChange = this.onChange.bind(this); 
         this.onSubmit = this.onSubmit.bind(this); 
     }
 
-    onChange(event:any) {
-        this.setState( { [event.target.name] : event.target.value } )
-        // console.log();
+    private onChange( event:{ target: { name: any; value: any; } } ):void {
+        const newState = { [event.target.name]: event.target.value } as Pick<ComponentState, keyof ComponentState>;
+        this.setState( newState )
         console.log(event.target.value);
     }
 
@@ -34,9 +42,30 @@ class BMICalc extends Component<ChildProps, {}>{
         console.log('submitted');
     }
 
-    render() {
+    private handleNxt = () => {
+        console.log(this.state);
+        this.setState( // setState is async, does not update state right away 
+            { currField: this.state.currField + 1 }, 
+            () => { // opt cb func that can update state right away 
+                console.log(this.state);
+            }
+        )
+    }
+
+    private handlePrev = () => {
+        console.log(this.state);
+        this.setState( // setState is async, does not update state right away 
+            { currField: this.state.currField - 1 }, 
+            () => { // opt cb func that can update state right away 
+                console.log(this.state);
+            }
+        )
+    }
+
+    public render() {
         return (
             <div className="form-content-right">
+                <h3>Jeff</h3>
                 <form className="form" onSubmit={this.onSubmit}>
                     <div className="form-inputs">
                         <label htmlFor="name" className="form-label">
@@ -89,6 +118,8 @@ class BMICalc extends Component<ChildProps, {}>{
                     </div>
                     <button type="submit" className="submit">Submit Form</button>
                 </form>
+                <button name="currField" onClick={this.handleNxt}>Next</button>
+                <button name="currField" onClick={this.handlePrev}>Back</button>
             </div>
         )
     }
