@@ -16,7 +16,7 @@ class App extends React.Component {
     weight: 202
   }
   render() {
-    const BMI_calcProps = { name: this.state.name}
+    const BMI_calcProps = { name: this.state.name} // look into why this works 
     return (
       <div className="App">
         <h1>BMI_Calc App</h1> {/* this is a comment*/}
