@@ -1,4 +1,4 @@
-import BMI_calc from './components/BMI_calc'
+import BMICalc from './components/BMI_calc'
 import React from 'react'
 
 interface Istate {
@@ -16,12 +16,11 @@ class App extends React.Component {
     weight: 202
   }
   render() {
-    const BMI_calcProps = { name: this.state.name} // look into why this works 
+    const BMICalcProps = { name: this.state.name, gender: this.state.gender, height: this.state.height, weight: this.state.weight } // look into why this works 
     return (
       <div className="App">
-        <h1>BMI_Calc App</h1> {/* this is a comment*/}
-        <BMI_calc {...BMI_calcProps}/> {/* this is how you embed comp to the main app*/}
-        <p>My name is {this.state.name} i am { this.state.gender ? 'male' : 'female'}, i am {this.state.height} tall and my weight is {this.state.weight}</p>
+        <h1>BMI Calculator</h1> {/* this is a comment*/}
+        <BMICalc {...BMICalcProps}/> {/* this is how you embed comp to the main app*/}
       </div>
     );
   }
