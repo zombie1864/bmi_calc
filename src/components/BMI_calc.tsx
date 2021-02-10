@@ -37,21 +37,21 @@ class BMICalc extends Component<ChildProps, ComponentState>{
     } // end of onChange 
 
     private onChangeNum( event:{ target: { name: any; value: any; } } ):void {
+        console.log('parseInt first ');
         const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<ComponentState, keyof ComponentState>;
         this.setState( newState)
     } // end of onChange 
 
-    private hasChar(numStr: number) {
-        console.log(numStr);
+    // private hasChar(numStr: number) {
+    //     console.log(numStr);
         
-        let numStrHasChar = false 
-        if ( !(/^[0.0-9.99]+$/ ).test( (numStr).toString() ) ) {
-            numStrHasChar = true
-        }
-        console.log(numStrHasChar);
-        
-        return numStrHasChar
-    }
+    //     let numStrHasChar = false 
+    //     if ( !(/^[0.0-9.99]+$/ ).test( (numStr).toString() ) ) {
+    //         numStrHasChar = true
+    //     }
+    //     console.log(numStrHasChar);
+    //     return numStrHasChar
+    // }
 
     private nameValidation(name:string) { // aux method
         let inValidName = false 
@@ -65,13 +65,15 @@ class BMICalc extends Component<ChildProps, ComponentState>{
     } // end of nameValidation 
 
     private heightValidation(height:number) {
-        console.log(height, typeof height);
         let invalidHeight = false 
-        if ( this.hasChar(height) ) return true 
+        // if ( this.hasChar(height) ) {
+        //     invalidHeight = true 
+        // } 
         if (isNaN(height)) invalidHeight = true 
         return invalidHeight
  
     }
+
     private weightValidation(weight:number) {
         let invalidWeight = false 
         if ( !(/^[0-9]+$/ ).test( (weight).toString() ) ) {
@@ -132,10 +134,6 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         )
     }
 
-    componentWillUnmount() { //clears the error message for the next session 
-        // this.props.clearErrors()
-    }
-
     public render() {
         let result
         if (this.state.currField === 0) { // name field and nameValidation 
@@ -181,7 +179,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     </select>
                 </div>
         } else if (this.state.currField === 2 ) { // height feild and heightValidation            
-            if (  this.heightValidation(this.state.height) ) {
+            if (  this.heightValidation(this.state.height) ) { // this happens 2nd 
                 result = 
                     <div className="form-inputs">
                         <label htmlFor="height" className="form-label">
@@ -196,7 +194,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                         />
                         <div>{this.renderHeightErrors()}</div>
                     </div>
-            } else {
+            } else { // this happens 1st 
                 result = 
                 <div className="form-inputs">
                     <label htmlFor="height" className="form-label">
@@ -207,7 +205,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                         name="height"
                         className="form-input"
                         placeholder="Height"
-                        onChange={this.onChangeNum}
+                        onChange={this.onChangeNum} // this is triggered 
                     />
                 </div>
             }
@@ -224,7 +222,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                             name="weight"
                             className="form-input"
                             placeholder="Weight"
-                            onChange={this.onChange}
+                            onChange={this.onChangeNum}
                         />
                     </div>
                     <div>{this.renderWeightErrors()}</div>
@@ -241,7 +239,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                                 name="weight"
                                 className="form-input"
                                 placeholder="Weight"
-                                onChange={this.onChange}
+                                onChange={this.onChangeNum}
                             />
                         </div>
                         <button type="submit" className="submit">Submit Form</button>
