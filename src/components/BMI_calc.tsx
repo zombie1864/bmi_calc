@@ -30,10 +30,23 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         this.onSubmit = this.onSubmit.bind(this); 
     }
 
-    private onChange( event:{ target: { name: any; value: any; } } ):void {
+    private onChange( // onChange -> validateName
+            event:{ 
+                target: { name: any; value: any; 
+            } 
+        } 
+        ):void {
         const newState = { [event.target.name]: event.target.value } as Pick<ComponentState, keyof ComponentState>;
-        this.setState( newState )
-        console.log(event.target.value);
+        this.setState( newState)
+    } // end of onChange 
+
+    private validateName(name:string) { // aux method
+        let inValidName = false 
+        if (name === 'Brian Griffin ') {
+            inValidName = true
+        }
+        console.log(name);
+        return inValidName
     }
 
     onSubmit(event:any):void {
@@ -43,14 +56,19 @@ class BMICalc extends Component<ChildProps, ComponentState>{
     }
 
     private handleNxt = () => {
-        console.log(this.state);
-        this.setState( // setState is async, does not update state right away 
-            { currField: this.state.currField + 1 }, 
-            () => { // opt cb func that can update state right away 
-                console.log(this.state);
-            }
-        )
-    }
+        // let proceedToNxt = false 
+        // if ( this.validateName(this.state.name) ) {
+            this.setState( // setState is async, does not update state right away 
+                { currField: this.state.currField + 1 }, 
+                () => { // opt cb func that can update state right away 
+                    // console.log(this.state);
+                }
+            )
+        //     proceedToNxt = true 
+        // }
+        // return proceedToNxt
+        // console.log(this.state);
+    } // end of handleNxt 
 
     private handlePrev = () => {
         console.log(this.state);
@@ -62,76 +80,108 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         )
     }
 
+    private renderErrors() {
+        return (
+            <p>Please enter a valid name NOW</p>
+        )
+    }
+
+    componentWillUnmount() { //clears the error message for the next session 
+        // this.props.clearErrors()
+    }
+
     public render() {
         let currFieldValue = this.state.currField 
         let result
-        switch ( currFieldValue ) {
-            case 0: 
-                result =  
-                    <div className="form-inputs">
-                        <label htmlFor="name" className="form-label">
-                            Name:
-                        </label>
-                        <input 
-                            // id="name"
-                            type="text" 
-                            name="name"
-                            className="form-input"
-                            placeholder="Name"
-                            onChange={this.onChange}
-                            />
-                    </div>
-                    break
-            case 1:
-                result = 
-                    <div className="form-inputs">
-                        <label htmlFor="gender" className="form-label">
-                            Gender:
-                        </label>
-                        <input 
-                            type="text" 
-                            name="gender"
-                            className="form-input"
-                            placeholder="Gender"
-                            onChange={this.onChange}
+        console.log(this.validateName(this.state.name));
+        if ( this.validateName(this.state.name) ) { // the problem is HERE 
+            result = 
+                <div className="form-inputs">
+                    <label htmlFor="name" className="form-label">
+                        Name:
+                    </label>
+                    <input 
+                        // id="name"
+                        type="text" 
+                        name="name"
+                        className="form-input"
+                        placeholder="Name"
+                        // value={this.state.name}
+                        onChange={this.onChange}
                         />
-                    </div>
-                    break
-            case 2:
-                result = 
-                    <div className="form-inputs">
-                        <label htmlFor="height" className="form-label">
-                            Height:
-                        </label>
-                        <input 
-                            type="text" 
-                            name="height"
-                            className="form-input"
-                            placeholder="Height"
-                            onChange={this.onChange}
-                        />
-                    </div>
-                    break
-            case 3:
-                result = 
-                    <div>
+                    <div>{ this.renderErrors() }</div>
+                </div>
+        } else {
+            // result = <p>hello</p>
+            switch ( currFieldValue ) {
+                case 0: 
+                    result =  
                         <div className="form-inputs">
-                            <label htmlFor="weight" className="form-label">
-                                Weight:
+                            <label htmlFor="name" className="form-label">
+                                Name:
+                            </label>
+                            <input 
+                                // id="name"
+                                type="text" 
+                                name="name"
+                                className="form-input"
+                                placeholder="Name"
+                                // value={this.state.name}
+                                onChange={this.onChange}
+                                />
+                        </div>
+                        break
+                case 1:
+                    result = 
+                        <div className="form-inputs">
+                            <label htmlFor="gender" className="form-label">
+                                Gender:
                             </label>
                             <input 
                                 type="text" 
-                                name="weight"
+                                name="gender"
                                 className="form-input"
-                                placeholder="Weight"
-                                onChange={this.onChange}
+                                placeholder="Gender"
+                                // onChange={this.onChange}
                             />
                         </div>
-                        <button type="submit" className="submit">Submit Form</button>
-                    </div>
-                    break
-            default:
-                this.setState( { currField: 0 } ) 
+                        break
+                case 2:
+                    result = 
+                        <div className="form-inputs">
+                            <label htmlFor="height" className="form-label">
+                                Height:
+                            </label>
+                            <input 
+                                type="text" 
+                                name="height"
+                                className="form-input"
+                                placeholder="Height"
+                                // onChange={this.onChange}
+                            />
+                        </div>
+                        break
+                case 3:
+                    result = 
+                        <div>
+                            <div className="form-inputs">
+                                <label htmlFor="weight" className="form-label">
+                                    Weight:
+                                </label>
+                                <input 
+                                    type="text" 
+                                    name="weight"
+                                    className="form-input"
+                                    placeholder="Weight"
+                                    // onChange={this.onChange}
+                                />
+                            </div>
+                            <button type="submit" className="submit">Submit Form</button>
+                        </div>
+                        break
+                default:
+                    this.setState( { currField: 0 } ) 
+            }
         }
         return (
             <div className="form-content-right">
