@@ -17,7 +17,7 @@ interface ComponentState {
 }
 
 class BMICalc extends Component<ChildProps, ComponentState>{
-    constructor(props: ChildProps) {
+    public constructor(props: ChildProps) {
         super(props);
         this.state = {
             name: this.props.name, 
@@ -28,36 +28,71 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         };
         this.onChange = this.onChange.bind(this); 
         this.onSubmit = this.onSubmit.bind(this); 
+        this.onChangeNum = this.onChangeNum.bind(this);
     }
 
-    private onChange( // onChange -> validateName
-            event:{ 
-                target: { name: any; value: any; 
-            } 
-        } 
-        ):void {
+    private onChange( event:{ target: { name: any; value: any; } } ):void {
         const newState = { [event.target.name]: event.target.value } as Pick<ComponentState, keyof ComponentState>;
         this.setState( newState)
     } // end of onChange 
 
-    private validateName(name:string) { // aux method
-        let inValidName = false 
-        if (name === 'Brian Griffin ') {
-            inValidName = true
+    private onChangeNum( event:{ target: { name: any; value: any; } } ):void {
+        const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<ComponentState, keyof ComponentState>;
+        this.setState( newState)
+    } // end of onChange 
+
+    private hasChar(numStr: number) {
+        console.log(numStr);
+        
+        let numStrHasChar = false 
+        if ( !(/^[0.0-9.99]+$/ ).test( (numStr).toString() ) ) {
+            numStrHasChar = true
         }
-        console.log(name);
-        return inValidName
+        console.log(numStrHasChar);
+        
+        return numStrHasChar
     }
 
-    onSubmit(event:any):void {
+    private nameValidation(name:string) { // aux method
+        let inValidName = false 
+        const emailUrlsAndSymbols = ['.com', '.co', '.io', '.net', '.edu', '@', '.']
+
+        if (name.indexOf(' ') === 0) inValidName = true
+        emailUrlsAndSymbols.forEach( el => {
+            if ( name.includes(el) ) inValidName = true
+        })
+        return inValidName
+    } // end of nameValidation 
+
+    private heightValidation(height:number) {
+        console.log(height, typeof height);
+        let invalidHeight = false 
+        if ( this.hasChar(height) ) return true 
+        if (isNaN(height)) invalidHeight = true 
+        return invalidHeight
+ 
+    }
+    private weightValidation(weight:number) {
+        let invalidWeight = false 
+        if ( !(/^[0-9]+$/ ).test( (weight).toString() ) ) {
+            invalidWeight = true
+        }
+        return invalidWeight
+    }
+
+    private onSubmit(event:any):void {
         event.preventDefault()
-        console.log(this.state);
-        console.log('submitted');
+        if (this.state.currField === 3) {
+            console.log(this.state);
+            console.log('submitted');
+        } else {
+            console.log('cannot submit');
+        }
     }
 
     private handleNxt = () => {
         // let proceedToNxt = false 
-        // if ( this.validateName(this.state.name) ) {
+        // if ( this.nameValidation(this.state.name) ) {
             this.setState( // setState is async, does not update state right away 
                 { currField: this.state.currField + 1 }, 
                 () => { // opt cb func that can update state right away 
@@ -80,9 +115,20 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         )
     }
 
-    private renderErrors() {
+    private renderNameErrors() {
         return (
-            <p>Please enter a valid name NOW</p>
+            <p>Please enter a valid name</p>
+        )
+    }
+
+    private renderHeightErrors() {
+        return (
+            <p>Please enter a valid height</p>
+        )
+    }
+    private renderWeightErrors() {
+        return (
+            <p>Please enter a valid weight</p>
         )
     }
 
@@ -91,98 +137,118 @@ class BMICalc extends Component<ChildProps, ComponentState>{
     }
 
     public render() {
-        let currFieldValue = this.state.currField 
         let result
-        console.log(this.validateName(this.state.name));
-        if ( this.validateName(this.state.name) ) { // the problem is HERE 
-            result = 
+        if (this.state.currField === 0) { // name field and nameValidation 
+            if (this.nameValidation(this.state.name)) {
+                result = 
+                    <div className="form-inputs">
+                        <label htmlFor="name" className="form-label">
+                            Name:
+                        </label>
+                        <input 
+                            type="text" 
+                            name="name"
+                            className="form-input"
+                            placeholder="Name"
+                            onChange={this.onChange}
+                            />
+                        <div>{ this.renderNameErrors() }</div>
+                    </div>
+            } else {
+                result = 
                 <div className="form-inputs">
                     <label htmlFor="name" className="form-label">
                         Name:
                     </label>
                     <input 
-                        // id="name"
                         type="text" 
                         name="name"
                         className="form-input"
                         placeholder="Name"
-                        // value={this.state.name}
                         onChange={this.onChange}
                         />
-                    <div>{ this.renderErrors() }</div>
                 </div>
-        } else {
-            // result = <p>hello</p>
-            switch ( currFieldValue ) {
-                case 0: 
-                    result =  
-                        <div className="form-inputs">
-                            <label htmlFor="name" className="form-label">
-                                Name:
-                            </label>
-                            <input 
-                                // id="name"
-                                type="text" 
-                                name="name"
-                                className="form-input"
-                                placeholder="Name"
-                                // value={this.state.name}
-                                onChange={this.onChange}
-                                />
-                        </div>
-                        break
-                case 1:
-                    result = 
-                        <div className="form-inputs">
-                            <label htmlFor="gender" className="form-label">
-                                Gender:
-                            </label>
-                            <input 
-                                type="text" 
-                                name="gender"
-                                className="form-input"
-                                placeholder="Gender"
-                                // onChange={this.onChange}
-                            />
-                        </div>
-                        break
-                case 2:
-                    result = 
-                        <div className="form-inputs">
-                            <label htmlFor="height" className="form-label">
-                                Height:
-                            </label>
-                            <input 
-                                type="text" 
-                                name="height"
-                                className="form-input"
-                                placeholder="Height"
-                                // onChange={this.onChange}
-                            />
-                        </div>
-                        break
-                case 3:
-                    result = 
-                        <div>
-                            <div className="form-inputs">
-                                <label htmlFor="weight" className="form-label">
-                                    Weight:
-                                </label>
-                                <input 
-                                    type="text" 
-                                    name="weight"
-                                    className="form-input"
-                                    placeholder="Weight"
-                                    // onChange={this.onChange}
-                                />
-                            </div>
-                            <button type="submit" className="submit">Submit Form</button>
-                        </div>
-                        break
-                default:
-                    this.setState( { currField: 0 } ) 
             }
-        }
+        } else if (this.state.currField === 1) { // gender drop-down menu
+            result = 
+                <div className="form-inputs">
+                    <label htmlFor="gender" className="form-label">
+                        Gender:
+                    </label>
+                    <select name="gender" className="genderOpt">
+                        <option value="true">Male</option>
+                        <option value="false">Female</option>
+                    </select>
+                </div>
+        } else if (this.state.currField === 2 ) { // height feild and heightValidation            
+            if (  this.heightValidation(this.state.height) ) {
+                result = 
+                    <div className="form-inputs">
+                        <label htmlFor="height" className="form-label">
+                            Height:
+                        </label>
+                        <input 
+                            type="text" 
+                            name="height"
+                            className="form-input"
+                            placeholder="Height"
+                            onChange={this.onChangeNum}
+                        />
+                        <div>{this.renderHeightErrors()}</div>
+                    </div>
+            } else {
+                result = 
+                <div className="form-inputs">
+                    <label htmlFor="height" className="form-label">
+                        Height:
+                    </label>
+                    <input 
+                        type="text" 
+                        name="height"
+                        className="form-input"
+                        placeholder="Height"
+                        onChange={this.onChangeNum}
+                    />
+                </div>
+            }
+        } else if ( this.state.currField === 3 ) {
+            if ( this.weightValidation(this.state.weight) ) {
+                result = 
+                <div>
+                    <div className="form-inputs">
+                        <label htmlFor="weight" className="form-label">
+                            Weight:
+                        </label>
+                        <input 
+                            type="text" 
+                            name="weight"
+                            className="form-input"
+                            placeholder="Weight"
+                            onChange={this.onChange}
+                        />
+                    </div>
+                    <div>{this.renderWeightErrors()}</div>
+                </div>
+            } else {
+                result = 
+                    <div>
+                        <div className="form-inputs">
+                            <label htmlFor="weight" className="form-label">
+                                Weight:
+                            </label>
+                            <input 
+                                type="text" 
+                                name="weight"
+                                className="form-input"
+                                placeholder="Weight"
+                                onChange={this.onChange}
+                            />
+                        </div>
+                        <button type="submit" className="submit">Submit Form</button>
+                    </div>
+
+            }
+        } 
         return (
             <div className="form-content-right">
                 <form className="form" onSubmit={this.onSubmit}>
