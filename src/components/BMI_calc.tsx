@@ -63,59 +63,71 @@ class BMICalc extends Component<ChildProps, ComponentState>{
     }
 
     public render() {
+        let result
+        if ( this.state.currField === 0 ) {
+            result =  
+                <div className="form-inputs">
+                    <label htmlFor="name" className="form-label">
+                        Name:
+                    </label>
+                    <input 
+                        // id="name"
+                        type="text" 
+                        name="name"
+                        className="form-input"
+                        placeholder="Name"
+                        onChange={this.onChange}
+                        />
+                </div>
+        } else if ( this.state.currField === 1 ) {
+            result = 
+                <div className="form-inputs">
+                    <label htmlFor="gender" className="form-label">
+                        Gender:
+                    </label>
+                    <input 
+                        type="text" 
+                        name="gender"
+                        className="form-input"
+                        placeholder="Gender"
+                        onChange={this.onChange}
+                    />
+                </div>
+        } else if ( this.state.currField === 2 ) {
+            result = 
+                <div className="form-inputs">
+                    <label htmlFor="height" className="form-label">
+                        Height:
+                    </label>
+                    <input 
+                        type="text" 
+                        name="height"
+                        className="form-input"
+                        placeholder="Height"
+                        onChange={this.onChange}
+                    />
+                </div>
+        } else if ( this.state.currField === 3 ) {
+            result = 
+                <div className="form-inputs">
+                    <label htmlFor="weight" className="form-label">
+                        Weight:
+                    </label>
+                    <input 
+                        type="text" 
+                        name="weight"
+                        className="form-input"
+                        placeholder="Weight"
+                        onChange={this.onChange}
+                    />
+                </div>
+        } else {
+            result = <h3>you gone too far</h3>
+        }
         return (
             <div className="form-content-right">
-                <h3>Jeff</h3>
                 <form className="form" onSubmit={this.onSubmit}>
-                    <div className="form-inputs">
-                        <label htmlFor="name" className="form-label">
-                            Name:
-                        </label>
-                        <input 
-                            // id="name"
-                            type="text" 
-                            name="name"
-                            className="form-input"
-                            placeholder="Name"
-                            onChange={this.onChange}
-                            />
-                    </div>
-                    <div className="form-inputs">
-                        <label htmlFor="gender" className="form-label">
-                            Gender:
-                        </label>
-                        <input 
-                            type="text" 
-                            name="gender"
-                            className="form-input"
-                            placeholder="Gender"
-                            onChange={this.onChange}
-                        />
-                    </div>
-                    <div className="form-inputs">
-                        <label htmlFor="height" className="form-label">
-                            Height:
-                        </label>
-                        <input 
-                            type="text" 
-                            name="height"
-                            className="form-input"
-                            placeholder="Height"
-                            onChange={this.onChange}
-                        />
-                    </div>
-                    <div className="form-inputs">
-                        <label htmlFor="weight" className="form-label">
-                            Weight:
-                        </label>
-                        <input 
-                            type="text" 
-                            name="weight"
-                            className="form-input"
-                            placeholder="Weight"
-                            onChange={this.onChange}
-                        />
-                    </div>
+                    {result}
                     <button type="submit" className="submit">Submit Form</button>
                 </form>
                 <button name="currField" onClick={this.handleNxt}>Next</button>
