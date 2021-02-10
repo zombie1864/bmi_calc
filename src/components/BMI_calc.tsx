@@ -114,17 +114,20 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     break
             case 3:
                 result = 
-                    <div className="form-inputs">
-                        <label htmlFor="weight" className="form-label">
-                            Weight:
-                        </label>
-                        <input 
-                            type="text" 
-                            name="weight"
-                            className="form-input"
-                            placeholder="Weight"
-                            onChange={this.onChange}
-                        />
+                    <div>
+                        <div className="form-inputs">
+                            <label htmlFor="weight" className="form-label">
+                                Weight:
+                            </label>
+                            <input 
+                                type="text" 
+                                name="weight"
+                                className="form-input"
+                                placeholder="Weight"
+                                onChange={this.onChange}
+                            />
+                        </div>
+                        <button type="submit" className="submit">Submit Form</button>
                     </div>
                     break
             default:
@@ -134,7 +137,6 @@ class BMICalc extends Component<ChildProps, ComponentState>{
             <div className="form-content-right">
                 <form className="form" onSubmit={this.onSubmit}>
                     {result}
-                    <button type="submit" className="submit">Submit Form</button>
                 </form>
                 <button name="currField" onClick={this.handleNxt}>Next</button>
                 <button name="currField" onClick={this.handlePrev}>Back</button>
