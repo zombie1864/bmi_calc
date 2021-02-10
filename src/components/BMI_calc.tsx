@@ -131,7 +131,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     </div>
                     break
             default:
-                result = <h3>you gone too far</h3>
+                this.setState( { currField: 0 } ) 
         }
         return (
             <div className="form-content-right">
