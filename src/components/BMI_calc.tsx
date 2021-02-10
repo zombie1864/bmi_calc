@@ -29,6 +29,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         this.onChange = this.onChange.bind(this); 
         this.onSubmit = this.onSubmit.bind(this); 
         this.onChangeNum = this.onChangeNum.bind(this);
+        this.changeGender = this.changeGender.bind(this);
     }
 
     private onChange( event:{ target: { name: any; value: any; } } ):void {
@@ -53,7 +54,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
     //     return numStrHasChar
     // }
 
-    private nameValidation(name:string) { // aux method
+    private invalidNameValidation(name:string): boolean { // aux method
         let inValidName = false 
         const emailUrlsAndSymbols = ['.com', '.co', '.io', '.net', '.edu', '@', '.']
 
@@ -62,9 +63,9 @@ class BMICalc extends Component<ChildProps, ComponentState>{
             if ( name.includes(el) ) inValidName = true
         })
         return inValidName
-    } // end of nameValidation 
+    } // end of invalidNameValidation 
 
-    private heightValidation(height:number) {
+    private heightValidation(height:number): boolean {
         let invalidHeight = false 
         // if ( this.hasChar(height) ) {
         //     invalidHeight = true 
@@ -74,7 +75,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
  
     }
 
-    private weightValidation(weight:number) {
+    private weightValidation(weight:number): boolean {
         let invalidWeight = false 
         if ( !(/^[0-9]+$/ ).test( (weight).toString() ) ) {
             invalidWeight = true
@@ -92,22 +93,29 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         }
     }
 
-    private handleNxt = () => {
-        // let proceedToNxt = false 
-        // if ( this.nameValidation(this.state.name) ) {
+    private changeGender(event:any) {
+        if ( event.target.value === 'true') {
+            this.setState({ gender: true });
+        } else {
+            this.setState({ gender: false });
+        }
+    }
+
+    private handleNxt = (): void => {
+        if ( this.state.name  === '') {
+            // render a msg i guess 
+        } else {
+            console.log(this.state);
             this.setState( // setState is async, does not update state right away 
                 { currField: this.state.currField + 1 }, 
                 () => { // opt cb func that can update state right away 
                     // console.log(this.state);
                 }
             )
-        //     proceedToNxt = true 
-        // }
-        // return proceedToNxt
-        // console.log(this.state);
+        }
     } // end of handleNxt 
 
-    private handlePrev = () => {
+    private handlePrev = (): void => {
         console.log(this.state);
         this.setState( // setState is async, does not update state right away 
             { currField: this.state.currField - 1 }, 
@@ -117,27 +125,27 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         )
     }
 
-    private renderNameErrors() {
+    private renderNameErrors():JSX.Element {
         return (
             <p>Please enter a valid name</p>
         )
     }
 
-    private renderHeightErrors() {
+    private renderHeightErrors():JSX.Element {
         return (
             <p>Please enter a valid height</p>
         )
     }
-    private renderWeightErrors() {
+    private renderWeightErrors():JSX.Element {
         return (
             <p>Please enter a valid weight</p>
         )
     }
 
-    public render() {
+    public render():JSX.Element {
         let result
-        if (this.state.currField === 0) { // name field and nameValidation 
-            if (this.nameValidation(this.state.name)) {
+        if (this.state.currField === 0) { // name field and invalidNameValidation 
+            if ( this.invalidNameValidation(this.state.name) ) {
                 result = 
                     <div className="form-inputs">
                         <label htmlFor="name" className="form-label">
@@ -173,9 +181,10 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     <label htmlFor="gender" className="form-label">
                         Gender:
                     </label>
-                    <select name="gender" className="genderOpt">
-                        <option value="true">Male</option>
-                        <option value="false">Female</option>
+                    <select name="gender" className="genderOpt" onChange={this.changeGender}>
+                        <option> -- select an option -- </option>
+                        <option value='true'>Male</option>
+                        <option value='false'>Female</option>
                     </select>
                 </div>
         } else if (this.state.currField === 2 ) { // height feild and heightValidation            
@@ -209,7 +218,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     />
                 </div>
             }
-        } else if ( this.state.currField === 3 ) {
+        } else if ( this.state.currField === 3 ) { // weight field and weightValidation
             if ( this.weightValidation(this.state.weight) ) {
                 result = 
                 <div>
