@@ -47,17 +47,17 @@ class BMICalc extends Component<ChildProps, ComponentState>{
     private onChangeNum( event:{ target: { name: any; value: any; } } ):void {
         const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<ComponentState, keyof ComponentState>;
         this.setState( newState)
-    } // end of onChange 
+    } // end of onChangeNum
 
     private onSubmit(event:any):void {
         event.preventDefault()
-        if (this.state.currField === 3) {
+        if (this.state.currField === 4) {
             console.log(this.state);
             console.log('submitted');
         } else {
             console.log('cannot submit');
         }
-    }
+    } // end of onSubmit 
 
     private changeGender(event:any):void {
         if ( event.target.value === 'true') {
@@ -67,7 +67,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
             this.setState({ gender: false });
             this.setState({ genderSelected: true })
         }
-    }
+    } // end of changeGender 
 
     // private hasChar(numStr: number) {
     //     console.log(numStr);
@@ -112,7 +112,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         if (isNaN(height)) invalidHeight = true 
         return invalidHeight
  
-    }
+    } // end of invalidHeightValidation 
 
     private weightValidation(weight:number): boolean {// aux method
         let invalidWeight = false 
@@ -120,7 +120,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
             invalidWeight = true
         }
         return invalidWeight
-    }
+    } // end of weightValidation
 
 /*****************************************************************************/
 // ---------------------------------[ BTNS ]---------------------------------
@@ -182,6 +182,8 @@ class BMICalc extends Component<ChildProps, ComponentState>{
 
     public render():JSX.Element {
         let result
+        let nxtBtn 
+        let prevBtn 
         if (this.state.currField === 0) { // name field and invalidNameValidation 
             if ( this.invalidNameValidation(this.state.name) ) {
                 result = 
@@ -289,18 +291,35 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                                 onChange={this.onChangeNum}
                             />
                         </div>
-                        <button type="submit" className="submit">Submit Form</button>
                     </div>
 
             }
-        } 
+        } else if ( this.state.currField === 4 ) { // review field and submit
+            result = 
+                <div>
+                    <p>Name: { this.state.name }</p>
+                    <p>Gender: { this.state.gender ? 'Male' : 'Female'}</p>
+                    <p>Height: { this.state.height }</p>
+                    <p>Weight: { this.state.weight }</p>
+                    <button type="submit" className="submit">Submit Form</button>
+                </div> 
+        }
+        if (
+            this.state.currField === 0 || 
+            this.state.currField === 1 || 
+            this.state.currField === 2 || 
+            this.state.currField === 3 
+        ) {
+            nxtBtn = <button name="currField" onClick={this.handleNxt}>Next</button>
+            prevBtn = <button name="currField" onClick={this.handlePrev}>Back</button>
+        }
         return (
             <div className="form-content-right">
                 <form className="form" onSubmit={this.onSubmit}>
                     {result}
                 </form>
-                <button name="currField" onClick={this.handleNxt}>Next</button>
-                <button name="currField" onClick={this.handlePrev}>Back</button>
+                {nxtBtn}
+                {prevBtn}
             </div>
         )
     }
