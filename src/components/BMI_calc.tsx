@@ -5,7 +5,8 @@ interface ChildProps {
     gender: boolean, 
     height: number, 
     weight: number,
-    currField: number
+    currField: number, 
+    genderSelected: boolean
 }
 
 interface ComponentState {
@@ -13,7 +14,8 @@ interface ComponentState {
     gender: boolean, 
     height: number, 
     weight: number,
-    currField: number
+    currField: number, 
+    genderSelected: boolean
 }
 
 class BMICalc extends Component<ChildProps, ComponentState>{
@@ -24,7 +26,8 @@ class BMICalc extends Component<ChildProps, ComponentState>{
             gender: this.props.gender, 
             height: this.props.height, 
             weight: this.props.weight, 
-            currField: this.props.currField
+            currField: this.props.currField, 
+            genderSelected: this.props.genderSelected
         };
         this.onChange = this.onChange.bind(this); 
         this.onSubmit = this.onSubmit.bind(this); 
@@ -38,7 +41,6 @@ class BMICalc extends Component<ChildProps, ComponentState>{
     } // end of onChange 
 
     private onChangeNum( event:{ target: { name: any; value: any; } } ):void {
-        console.log('parseInt first ');
         const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<ComponentState, keyof ComponentState>;
         this.setState( newState)
     } // end of onChange 
@@ -65,7 +67,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         return inValidName
     } // end of invalidNameValidation 
 
-    private heightValidation(height:number): boolean {
+    private invalidHeightValidation(height:number): boolean {
         let invalidHeight = false 
         // if ( this.hasChar(height) ) {
         //     invalidHeight = true 
@@ -93,23 +95,29 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         }
     }
 
-    private changeGender(event:any) {
+    private changeGender(event:any):void {
         if ( event.target.value === 'true') {
             this.setState({ gender: true });
+            this.setState({ genderSelected: true })
         } else {
             this.setState({ gender: false });
+            this.setState({ genderSelected: true })
         }
     }
 
     private handleNxt = (): void => {
-        if ( this.state.name  === '') {
-            // render a msg i guess 
+        if ( this.state.currField === 0 && this.state.name === '' || this.invalidNameValidation(this.state.name) ) { 
+            // stop here 
+        } else if ( this.state.currField === 1 && !this.state.genderSelected ) {
+            // stop here 
+        } else if ( this.state.currField === 2 && this.state.height === 0 || this.invalidHeightValidation(this.state.height)) {
+            // stop here 
+        } else if ( this.state.currField === 3 && this.state.weight === 0 ) {
+            // stop here 
         } else {
-            console.log(this.state);
             this.setState( // setState is async, does not update state right away 
                 { currField: this.state.currField + 1 }, 
                 () => { // opt cb func that can update state right away 
-                    // console.log(this.state);
                 }
             )
         }
@@ -125,18 +133,19 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         )
     }
 
-    private renderNameErrors():JSX.Element {
+    private renderNameErrors():JSX.Element { // renders err
         return (
             <p>Please enter a valid name</p>
         )
     }
 
-    private renderHeightErrors():JSX.Element {
+    private renderHeightErrors():JSX.Element { // renders err
         return (
             <p>Please enter a valid height</p>
         )
     }
-    private renderWeightErrors():JSX.Element {
+
+    private renderWeightErrors():JSX.Element { // renders err
         return (
             <p>Please enter a valid weight</p>
         )
@@ -188,7 +197,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     </select>
                 </div>
         } else if (this.state.currField === 2 ) { // height feild and heightValidation            
-            if (  this.heightValidation(this.state.height) ) { // this happens 2nd 
+            if (  this.invalidHeightValidation(this.state.height) ) { // this happens 2nd 
                 result = 
                     <div className="form-inputs">
                         <label htmlFor="height" className="form-label">
