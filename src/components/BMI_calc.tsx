@@ -54,7 +54,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
 
     private onSubmit(event:any):void {
         event.preventDefault()
-        if (this.state.currField === 4) {
+        if (this.state.currField === 5) {
             console.log(this.state);
             console.log('submitted');
         } else {
@@ -131,13 +131,13 @@ class BMICalc extends Component<ChildProps, ComponentState>{
 /*****************************************************************************/
 
     private handleNxt = (): void => {
-        if ( this.state.currField === 0 && this.state.name === '' || this.invalidNameValidation(this.state.name) ) { 
+        if ( this.state.currField === 1 && this.state.name === '' || this.invalidNameValidation(this.state.name) ) { 
             // stop here 
-        } else if ( this.state.currField === 1 && !this.state.genderSelected ) {
+        } else if ( this.state.currField === 2 && !this.state.genderSelected ) {
             // stop here 
-        } else if ( this.state.currField === 2 && this.state.height === 0 || this.invalidHeightValidation(this.state.height)) {
+        } else if ( this.state.currField === 3 && this.state.height === 0 || this.invalidHeightValidation(this.state.height)) {
             // stop here 
-        } else if ( this.state.currField === 3 && this.state.weight === 0 ) {
+        } else if ( this.state.currField === 4 && this.state.weight === 0 ) {
             // stop here 
         } else {
             this.setState( // setState is async, does not update state right away 
@@ -190,7 +190,13 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         let prevBtn 
         let bmiResultMsg
         const bmiResult = this.state.weight / (this.state.height * this.state.height)
-        if (this.state.currField === 0) { // name field and invalidNameValidation 
+        if (this.state.currField === 0) {
+            result = 
+                <div>
+                    <p>Greetings and welcome to BMI Calculator</p>
+                    <p>Press next to enter your info to calcuate your bmi</p>
+                </div>
+        } else if (this.state.currField === 1) { // name field and invalidNameValidation 
             if ( this.invalidNameValidation(this.state.name) ) {
                 result = 
                     <div className="form-inputs">
@@ -221,7 +227,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                         />
                 </div>
             }
-        } else if (this.state.currField === 1) { // gender drop-down menu
+        } else if (this.state.currField === 2) { // gender drop-down menu
             result = 
                 <div className="form-inputs">
                     <label htmlFor="gender" className="form-label">
@@ -233,7 +239,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                         <option value='false'>Female</option>
                     </select>
                 </div>
-        } else if (this.state.currField === 2 ) { // height feild and heightValidation            
+        } else if (this.state.currField === 3 ) { // height feild and heightValidation            
             if (  this.invalidHeightValidation(this.state.height) ) { // this happens 2nd 
                 result = 
                     <div className="form-inputs">
@@ -264,7 +270,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     />
                 </div>
             }
-        } else if ( this.state.currField === 3 ) { // weight field and weightValidation
+        } else if ( this.state.currField === 4 ) { // weight field and weightValidation
             if ( this.weightValidation(this.state.weight) ) {
                 result = 
                 <div>
@@ -300,7 +306,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     </div>
 
             }
-        } else if ( this.state.currField === 4 ) { // review field and submit
+        } else if ( this.state.currField === 5 ) { // review field and submit
             result = 
                 <div>
                     <p>Name: { this.state.name }</p>
@@ -310,11 +316,12 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     <button type="submit" className="submit">Submit Form</button>
                 </div> 
         }
+        if ( this.state.currField === 0 ) nxtBtn = <button name="currField" onClick={this.handleNxt}>Next</button>
         if ( // shows btns based on currField 
-            this.state.currField === 0 || 
             this.state.currField === 1 || 
             this.state.currField === 2 || 
-            this.state.currField === 3 
+            this.state.currField === 3 || 
+            this.state.currField === 4 
         ) {
             nxtBtn = <button name="currField" onClick={this.handleNxt}>Next</button>
             prevBtn = <button name="currField" onClick={this.handlePrev}>Back</button>
