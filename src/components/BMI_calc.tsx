@@ -209,24 +209,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     <p>Press next to enter your info to calcuate your bmi</p>
                 </div>
         } else if (this.state.currField === 1) { // name field and invalidNameValidation 
-            if ( this.invalidNameValidation(this.state.name) ) {
-                result = 
-                    <div className="form-inputs">
-                        <label htmlFor="name" className="form-label">
-                            Name:
-                        </label>
-                        <input 
-                            type="text" 
-                            name="name"
-                            className="form-input"
-                            placeholder="Name"
-                            onChange={this.onChange}
-                            />
-                            {this.invalidNameValidation(this.state.name) ? <div>no err</div> : <div>err</div>}
-                        <div>{ this.renderNameErrors() }</div>
-                    </div>
-            } else {
-                result = 
+            result = 
                 <div className="form-inputs">
                     <label htmlFor="name" className="form-label">
                         Name:
@@ -238,8 +221,8 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                         placeholder="Name"
                         onChange={this.onChange}
                         />
+                        {this.invalidNameValidation(this.state.name) ? <div>{ this.renderNameErrors() }</div> : <div></div>}
                 </div>
-            }
         } else if (this.state.currField === 2) { // gender drop-down menu
             result = 
                 <div className="form-inputs">
@@ -252,8 +235,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                         <option value='false'>Female</option>
                     </select>
                 </div>
-        } else if (this.state.currField === 3 ) { // height feild and heightValidation            
-            if (  this.invalidHeightValidation(this.state.height) ) { // this happens 2nd 
+        } else if (this.state.currField === 3 ) { // height feild and heightValidation 
                 result = 
                     <div className="form-inputs">
                         <label htmlFor="height" className="form-label">
@@ -266,59 +248,25 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                             placeholder="Height"
                             onChange={this.onChangeNum}
                         />
-                        <div>{this.renderHeightErrors()}</div>
+                        <div>{ this.invalidHeightValidation(this.state.height) ? <div>{this.renderHeightErrors()}</div> : <div></div> }</div>
                     </div>
-            } else { // this happens 1st 
-                result = 
+        } else if ( this.state.currField === 4 ) { // weight field and weightValidation
+            result = 
+            <div>
                 <div className="form-inputs">
-                    <label htmlFor="height" className="form-label">
-                        Height:
+                    <label htmlFor="weight" className="form-label">
+                        Weight:
                     </label>
                     <input 
                         type="text" 
-                        name="height"
+                        name="weight"
                         className="form-input"
-                        placeholder="Height"
-                        onChange={this.onChangeNum} // this is triggered 
+                        placeholder="Weight"
+                        onChange={this.onChangeNum}
                     />
                 </div>
-            }
-        } else if ( this.state.currField === 4 ) { // weight field and weightValidation
-            if ( this.weightValidation(this.state.weight) ) {
-                result = 
-                <div>
-                    <div className="form-inputs">
-                        <label htmlFor="weight" className="form-label">
-                            Weight:
-                        </label>
-                        <input 
-                            type="text" 
-                            name="weight"
-                            className="form-input"
-                            placeholder="Weight"
-                            onChange={this.onChangeNum}
-                        />
-                    </div>
-                    <div>{this.renderWeightErrors()}</div>
-                </div>
-            } else {
-                result = 
-                    <div>
-                        <div className="form-inputs">
-                            <label htmlFor="weight" className="form-label">
-                                Weight:
-                            </label>
-                            <input 
-                                type="text" 
-                                name="weight"
-                                className="form-input"
-                                placeholder="Weight"
-                                onChange={this.onChangeNum}
-                            />
-                        </div>
-                    </div>
-
-            }
+                <div>{ this.weightValidation(this.state.weight) ? this.renderWeightErrors() : <div></div> }</div>
+            </div>
         } else if ( this.state.currField === 5 ) { // review field and submit
             result = 
                 <div>
