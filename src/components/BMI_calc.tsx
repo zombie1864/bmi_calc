@@ -201,7 +201,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         let prevBtn 
         let bmiResultMsg
         let homeBtn
-        const bmiResult = this.state.weight / (this.state.height * this.state.height)
+        const bmiResult = 703 * ( this.state.weight / ( ( this.state.height* 12 ) * ( this.state.height * 12 ) ) ) 
         if (this.state.currField === 0) {
             result = 
                 <div>
