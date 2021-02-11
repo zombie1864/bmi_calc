@@ -21,6 +21,7 @@ interface ComponentState {
 }
 
 class BMICalc extends Component<ChildProps, ComponentState>{
+    private baseState: object
     public constructor(props: ChildProps) {
         super(props);
         this.state = {
@@ -32,6 +33,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
             genderSelected: this.props.genderSelected,
             isSubmitted: this.props.isSubmitted
         };
+        this.baseState = this.state
         this.onChange = this.onChange.bind(this); 
         this.onSubmit = this.onSubmit.bind(this); 
         this.onChangeNum = this.onChangeNum.bind(this);
@@ -158,6 +160,15 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         )
     } // end of handlePrev 
 
+    private handleHome = (): void => {
+        this.setState( 
+            this.baseState, 
+            () => {
+                console.log(this.state);  
+            }
+        )
+    } // end of handleHome
+
 /*****************************************************************************/
 // ---------------------------------[ ERR ]---------------------------------
 /*****************************************************************************/
@@ -189,6 +200,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         let nxtBtn 
         let prevBtn 
         let bmiResultMsg
+        let homeBtn
         const bmiResult = this.state.weight / (this.state.height * this.state.height)
         if (this.state.currField === 0) {
             result = 
@@ -327,11 +339,13 @@ class BMICalc extends Component<ChildProps, ComponentState>{
             prevBtn = <button name="currField" onClick={this.handlePrev}>Back</button>
         }
         if ( this.state.isSubmitted) bmiResultMsg = <p>congrates, your bmi is {bmiResult}</p>
+        if ( this.state.isSubmitted) homeBtn = <button name="currField" onClick={this.handleHome}>Home</button>
         return (
             <div className="form-content-right">
                 <form className="form" onSubmit={this.onSubmit}>
                     {result}
                     {bmiResultMsg}
+                    {homeBtn}
                 </form>
                 {nxtBtn}
                 {prevBtn}
