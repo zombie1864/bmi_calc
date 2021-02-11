@@ -20,7 +20,7 @@ interface ComponentState {
     isSubmitted: boolean
 }
 
-class BMICalc extends Component<ChildProps, ComponentState>{
+class BMICalcOld extends Component<ChildProps, ComponentState>{
     private baseState: object
     public constructor(props: ChildProps) {
         super(props);
@@ -303,4 +303,4 @@ class BMICalc extends Component<ChildProps, ComponentState>{
     }
 }
 
-export default BMICalc
+export default BMICalcOld

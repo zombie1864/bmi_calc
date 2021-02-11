@@ -1,4 +1,4 @@
-import BMICalc from './components/BMI_calc'
+import BMICalcOld from './components/BMI_calc'
 import React from 'react'
 
 interface Istate {
@@ -11,7 +11,7 @@ interface Istate {
   isSubmitted: boolean
 }
 
-class App extends React.Component { 
+class BMICalc extends React.Component { 
   state: Istate = { // global state, initialState
     name: '', 
     gender: true, // using boolean for gender male: true female: false 
@@ -35,10 +35,10 @@ class App extends React.Component {
     return (
       <div className="App">
         <h1>BMI Calculator</h1> {/* this is a comment*/}
-        <BMICalc {...BMICalcProps}/> {/* this is how you embed comp to the main app*/}
+        <BMICalcOld {...BMICalcProps}/> {/* this is how you embed comp to the main app*/}
       </div>
     );
   }
 }
 
-export default App;
+export default BMICalc;
