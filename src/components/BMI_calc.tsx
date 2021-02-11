@@ -35,6 +35,10 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         this.changeGender = this.changeGender.bind(this);
     }
 
+/*****************************************************************************/
+// -----------------------------[ EVENT HANDLERS ]-----------------------------
+/*****************************************************************************/
+
     private onChange( event:{ target: { name: any; value: any; } } ):void {
         const newState = { [event.target.name]: event.target.value } as Pick<ComponentState, keyof ComponentState>;
         this.setState( newState)
@@ -44,6 +48,26 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<ComponentState, keyof ComponentState>;
         this.setState( newState)
     } // end of onChange 
+
+    private onSubmit(event:any):void {
+        event.preventDefault()
+        if (this.state.currField === 3) {
+            console.log(this.state);
+            console.log('submitted');
+        } else {
+            console.log('cannot submit');
+        }
+    }
+
+    private changeGender(event:any):void {
+        if ( event.target.value === 'true') {
+            this.setState({ gender: true });
+            this.setState({ genderSelected: true })
+        } else {
+            this.setState({ gender: false });
+            this.setState({ genderSelected: true })
+        }
+    }
 
     // private hasChar(numStr: number) {
     //     console.log(numStr);
@@ -55,6 +79,10 @@ class BMICalc extends Component<ChildProps, ComponentState>{
     //     console.log(numStrHasChar);
     //     return numStrHasChar
     // }
+
+/*****************************************************************************/
+// ----------------------------[ FORM VALIDATION ]----------------------------
+/*****************************************************************************/
 
     private invalidNameValidation(name:string): boolean { // aux method
         let inValidName = false 
@@ -85,25 +113,9 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         return invalidWeight
     }
 
-    private onSubmit(event:any):void {
-        event.preventDefault()
-        if (this.state.currField === 3) {
-            console.log(this.state);
-            console.log('submitted');
-        } else {
-            console.log('cannot submit');
-        }
-    }
-
-    private changeGender(event:any):void {
-        if ( event.target.value === 'true') {
-            this.setState({ gender: true });
-            this.setState({ genderSelected: true })
-        } else {
-            this.setState({ gender: false });
-            this.setState({ genderSelected: true })
-        }
-    }
+/*****************************************************************************/
+// ---------------------------------[ BTNS ]---------------------------------
+/*****************************************************************************/
 
     private handleNxt = (): void => {
         if ( this.state.currField === 0 && this.state.name === '' || this.invalidNameValidation(this.state.name) ) { 
@@ -133,6 +145,10 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         )
     }
 
+/*****************************************************************************/
+// ---------------------------------[ ERR ]---------------------------------
+/*****************************************************************************/
+
     private renderNameErrors():JSX.Element { // renders err
         return (
             <p>Please enter a valid name</p>
@@ -150,6 +166,10 @@ class BMICalc extends Component<ChildProps, ComponentState>{
             <p>Please enter a valid weight</p>
         )
     }
+
+/*****************************************************************************/
+// ---------------------------------[ RENDER ]---------------------------------
+/*****************************************************************************/
 
     public render():JSX.Element {
         let result
