@@ -133,11 +133,11 @@ class BMICalc extends Component<ChildProps, ComponentState>{
 /*****************************************************************************/
 
     private handleNxt = (): void => {
-        if ( this.state.currField === 1 && this.state.name === '' || this.invalidNameValidation(this.state.name) ) { 
+        if ( ( this.state.currField === 1 && this.state.name === '') || this.invalidNameValidation(this.state.name) ) { 
             // stop here 
         } else if ( this.state.currField === 2 && !this.state.genderSelected ) {
             // stop here 
-        } else if ( this.state.currField === 3 && this.state.height === 0 || this.invalidHeightValidation(this.state.height)) {
+        } else if ( ( this.state.currField === 3 && this.state.height === 0 ) || this.invalidHeightValidation(this.state.height)) {
             // stop here 
         } else if ( this.state.currField === 4 && this.state.weight === 0 ) {
             // stop here 
@@ -222,6 +222,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                             placeholder="Name"
                             onChange={this.onChange}
                             />
+                            {this.invalidNameValidation(this.state.name) ? <div>no err</div> : <div>err</div>}
                         <div>{ this.renderNameErrors() }</div>
                     </div>
             } else {
