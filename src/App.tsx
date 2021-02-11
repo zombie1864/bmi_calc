@@ -7,7 +7,8 @@ interface Istate {
   height: number, 
   weight: number,
   currField: number, 
-  genderSelected: boolean
+  genderSelected: boolean, 
+  isSubmitted: boolean
 }
 
 class App extends React.Component { 
@@ -17,10 +18,20 @@ class App extends React.Component {
     height: 0, 
     weight: 0,
     currField: 0, 
-    genderSelected: false 
+    genderSelected: false, 
+    isSubmitted: false 
   }
   render() {
-    const BMICalcProps = { name: this.state.name, gender: this.state.gender, height: this.state.height, weight: this.state.weight, currField:this.state.currField, genderSelected:this.state.genderSelected } // look into why this works 
+    const BMICalcProps = { 
+      name: this.state.name, 
+      gender: 
+      this.state.gender, 
+      height: this.state.height, 
+      weight: this.state.weight, 
+      currField: this.state.currField, 
+      genderSelected: this.state.genderSelected,  
+      isSubmitted: this.state.isSubmitted
+    } // look into why this works 
     return (
       <div className="App">
         <h1>BMI Calculator</h1> {/* this is a comment*/}

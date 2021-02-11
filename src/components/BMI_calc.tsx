@@ -6,7 +6,8 @@ interface ChildProps {
     height: number, 
     weight: number,
     currField: number, 
-    genderSelected: boolean
+    genderSelected: boolean,
+    isSubmitted: boolean
 }
 
 interface ComponentState {
@@ -15,7 +16,8 @@ interface ComponentState {
     height: number, 
     weight: number,
     currField: number, 
-    genderSelected: boolean
+    genderSelected: boolean,
+    isSubmitted: boolean
 }
 
 class BMICalc extends Component<ChildProps, ComponentState>{
@@ -27,7 +29,8 @@ class BMICalc extends Component<ChildProps, ComponentState>{
             height: this.props.height, 
             weight: this.props.weight, 
             currField: this.props.currField, 
-            genderSelected: this.props.genderSelected
+            genderSelected: this.props.genderSelected,
+            isSubmitted: this.props.isSubmitted
         };
         this.onChange = this.onChange.bind(this); 
         this.onSubmit = this.onSubmit.bind(this); 
@@ -57,6 +60,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         } else {
             console.log('cannot submit');
         }
+        this.setState({ isSubmitted: true })
     } // end of onSubmit 
 
     private changeGender(event:any):void {
@@ -184,6 +188,8 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         let result
         let nxtBtn 
         let prevBtn 
+        let bmiResultMsg
+        const bmiResult = this.state.weight / (this.state.height * this.state.height)
         if (this.state.currField === 0) { // name field and invalidNameValidation 
             if ( this.invalidNameValidation(this.state.name) ) {
                 result = 
@@ -304,7 +310,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                     <button type="submit" className="submit">Submit Form</button>
                 </div> 
         }
-        if (
+        if ( // shows btns based on currField 
             this.state.currField === 0 || 
             this.state.currField === 1 || 
             this.state.currField === 2 || 
@@ -313,10 +319,12 @@ class BMICalc extends Component<ChildProps, ComponentState>{
             nxtBtn = <button name="currField" onClick={this.handleNxt}>Next</button>
             prevBtn = <button name="currField" onClick={this.handlePrev}>Back</button>
         }
+        if ( this.state.isSubmitted) bmiResultMsg = <p>congrates, your bmi is {bmiResult}</p>
         return (
             <div className="form-content-right">
                 <form className="form" onSubmit={this.onSubmit}>
                     {result}
+                    {bmiResultMsg}
                 </form>
                 {nxtBtn}
                 {prevBtn}
