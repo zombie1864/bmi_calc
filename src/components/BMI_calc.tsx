@@ -92,6 +92,9 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         emailUrlsAndSymbols.forEach( el => {
             if ( name.includes(el) ) inValidName = true
         })
+        if ( (/^[0-9]+$/ ).test( (name) ) ) {
+            inValidName = true
+        }
         return inValidName
     } // end of invalidNameValidation 
 
@@ -111,7 +114,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
  
     }
 
-    private weightValidation(weight:number): boolean {
+    private weightValidation(weight:number): boolean {// aux method
         let invalidWeight = false 
         if ( !(/^[0-9]+$/ ).test( (weight).toString() ) ) {
             invalidWeight = true
