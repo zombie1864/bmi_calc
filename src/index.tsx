@@ -1,10 +1,10 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import BMICalc from './App';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <BMICalc />
   </React.StrictMode>,
   document.getElementById('root')
 );
