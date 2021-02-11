@@ -156,7 +156,7 @@ class BMICalc extends Component<ChildProps, ComponentState>{
                 console.log(this.state);
             }
         )
-    }
+    } // end of handlePrev 
 
 /*****************************************************************************/
 // ---------------------------------[ ERR ]---------------------------------
