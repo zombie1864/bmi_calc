@@ -95,8 +95,14 @@ class BMICalc extends Component<ChildProps, ComponentState>{
         return inValidName
     } // end of invalidNameValidation 
 
-    private invalidHeightValidation(height:number): boolean {
+    private invalidHeightValidation(height:number): boolean { // aux method 
+        console.log(height);
         let invalidHeight = false 
+        if (height < 0.0 || height > 8.0 ) {
+            invalidHeight = true 
+        } else if ( height === 0 ) {
+            invalidHeight = false 
+        }
         // if ( this.hasChar(height) ) {
         //     invalidHeight = true 
         // } 
