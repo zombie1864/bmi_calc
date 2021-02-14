@@ -1,4 +1,3 @@
-// import BMICalcOld from './components/BMI_calc'
 import React from 'react'
 
 interface Istate {
