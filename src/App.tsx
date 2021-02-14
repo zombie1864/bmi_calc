@@ -17,8 +17,8 @@ class App extends React.Component<{}, Istate> {
       this.state = {
           name: '', 
           gender: true, 
-          height: 0, 
-          weight: 0, 
+          height: 3.0, 
+          weight: 60, 
           currField: 0, 
           genderSelected: false,
           isSubmitted: false
@@ -94,29 +94,28 @@ class App extends React.Component<{}, Istate> {
       return inValidName
   } // end of invalidNameValidation 
 
-  private invalidHeightValidation(height:number): boolean { // aux method 
-      console.log(height);
-      let invalidHeight = false 
-      if (height < 0.0 || height > 8.0 ) {
-          invalidHeight = true 
-      } else if ( height === 0 ) {
-          invalidHeight = false 
+  private invalidNumberValidation(
+      height:number, 
+      weight:number,
+      miniHeight:number = 3.0, 
+      maxHeight:number = 8.0, 
+      miniWeight:number = 60, 
+      maxWeight:number = 600
+    ): boolean { // aux method 
+      let invalidNumber = false 
+      if (height < miniHeight || height > maxHeight ) {
+          invalidNumber = true 
       }
-      // if ( this.hasChar(height) ) {
-      //     invalidHeight = true 
-      // } 
-      if (isNaN(height)) invalidHeight = true 
-      return invalidHeight
-
-  } // end of invalidHeightValidation 
-
-  private weightValidation(weight:number): boolean {// aux method
-      let invalidWeight = false 
       if ( !(/^[0-9]+$/ ).test( (weight).toString() ) ) {
-          invalidWeight = true
-      }
-      return invalidWeight
-  } // end of weightValidation
+        invalidNumber = true
+    }
+    if (weight < miniWeight || weight > maxWeight ) {
+      invalidNumber = true 
+    }
+      if (isNaN(height)) invalidNumber = true 
+      return invalidNumber
+
+  } // end of invalidNumberValidation
 
 /*****************************************************************************/
 // ---------------------------------[ BTNS ]---------------------------------
@@ -127,9 +126,9 @@ class App extends React.Component<{}, Istate> {
           // stop here 
       } else if ( this.state.currField === 2 && !this.state.genderSelected ) {
           // stop here 
-      } else if ( ( this.state.currField === 3 && this.state.height === 0 ) || this.invalidHeightValidation(this.state.height)) {
+      } else if ( this.state.currField === 3 && this.invalidNumberValidation(this.state.height, this.state.weight)) {
           // stop here 
-      } else if ( this.state.currField === 4 && this.state.weight === 0 ) {
+      } else if ( this.state.currField === 4 && this.invalidNumberValidation(this.state.height, this.state.weight) ) {
           // stop here 
       } else {
           this.setState( // setState is async, does not update state right away 
@@ -238,7 +237,7 @@ class App extends React.Component<{}, Istate> {
                           placeholder="Height"
                           onChange={this.onChangeNum}
                       />
-                      <div>{ this.invalidHeightValidation(this.state.height) ? <div>{this.renderHeightErrors()}</div> : <div></div> }</div>
+                      <div>{ this.invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderHeightErrors()}</div> : <div></div> }</div>
                   </div>
       } else if ( this.state.currField === 4 ) { // weight field and weightValidation
           result = 
@@ -255,7 +254,7 @@ class App extends React.Component<{}, Istate> {
                       onChange={this.onChangeNum}
                   />
               </div>
-              <div>{ this.weightValidation(this.state.weight) ? this.renderWeightErrors() : <div></div> }</div>
+              <div>{ this.invalidNumberValidation(this.state.height, this.state.weight) ? this.renderWeightErrors() : <div></div> }</div>
           </div>
       } else if ( this.state.currField === 5 ) { // review field and submit
           result = 
