@@ -1,4 +1,5 @@
 import React from 'react'
+import { invalidNameValidation, invalidNumberValidation } from './validators'
 
 interface Istate {
   name: string, 
@@ -17,8 +18,8 @@ class App extends React.Component<{}, Istate> {
       this.state = {
           name: '', 
           gender: true, 
-          height: 0, 
-          weight: 0, 
+          height: 3.0, 
+          weight: 60, 
           currField: 0, 
           genderSelected: false,
           isSubmitted: false
@@ -64,91 +65,30 @@ class App extends React.Component<{}, Istate> {
           this.setState({ genderSelected: true })
       }
   } // end of changeGender 
-
-  // private hasChar(numStr: number) {
-  //     console.log(numStr);
-      
-  //     let numStrHasChar = false 
-  //     if ( !(/^[0.0-9.99]+$/ ).test( (numStr).toString() ) ) {
-  //         numStrHasChar = true
-  //     }
-  //     console.log(numStrHasChar);
-  //     return numStrHasChar
-  // }
-
-/*****************************************************************************/
-// ----------------------------[ FORM VALIDATION ]----------------------------
-/*****************************************************************************/
-
-  private invalidNameValidation(name:string): boolean { // aux method
-      let inValidName = false 
-      const emailUrlsAndSymbols = ['.com', '.co', '.io', '.net', '.edu', '@', '.']
-
-      if (name.indexOf(' ') === 0) inValidName = true
-      emailUrlsAndSymbols.forEach( el => {
-          if ( name.includes(el) ) inValidName = true
-      })
-      if ( (/^[0-9]+$/ ).test( (name) ) ) {
-          inValidName = true
-      }
-      return inValidName
-  } // end of invalidNameValidation 
-
-  private invalidHeightValidation(height:number): boolean { // aux method 
-      console.log(height);
-      let invalidHeight = false 
-      if (height < 0.0 || height > 8.0 ) {
-          invalidHeight = true 
-      } else if ( height === 0 ) {
-          invalidHeight = false 
-      }
-      // if ( this.hasChar(height) ) {
-      //     invalidHeight = true 
-      // } 
-      if (isNaN(height)) invalidHeight = true 
-      return invalidHeight
-
-  } // end of invalidHeightValidation 
-
-  private weightValidation(weight:number): boolean {// aux method
-      let invalidWeight = false 
-      if ( !(/^[0-9]+$/ ).test( (weight).toString() ) ) {
-          invalidWeight = true
-      }
-      return invalidWeight
-  } // end of weightValidation
-
+  
 /*****************************************************************************/
 // ---------------------------------[ BTNS ]---------------------------------
 /*****************************************************************************/
 
-  private handleNxt = (): void => {
-      if ( ( this.state.currField === 1 && this.state.name === '') || this.invalidNameValidation(this.state.name) ) { 
-          // stop here 
-      } else if ( this.state.currField === 2 && !this.state.genderSelected ) {
-          // stop here 
-      } else if ( ( this.state.currField === 3 && this.state.height === 0 ) || this.invalidHeightValidation(this.state.height)) {
-          // stop here 
-      } else if ( this.state.currField === 4 && this.state.weight === 0 ) {
-          // stop here 
-      } else {
-          this.setState( // setState is async, does not update state right away 
-              { currField: this.state.currField + 1 }, 
-              () => { // opt cb func that can update state right away 
-              }
-          )
-      }
+  private handleOnClick = (event: any): void => { // onClicks have events 
+    if ( ( this.state.currField === 1 && this.state.name === '') || invalidNameValidation(this.state.name) ) { 
+        // stop here 
+    } else if ( this.state.currField === 2 && !this.state.genderSelected ) {
+        // stop here 
+    } else if ( this.state.currField === 3 && invalidNumberValidation(this.state.height, this.state.weight)) {
+        // stop here 
+    } else if ( this.state.currField === 4 && invalidNumberValidation(this.state.height, this.state.weight) ) {
+        // stop here 
+    } 
+    if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 },     
+      () => { // opt cb func that can update state right away 
+        console.log(this.state);
+      } )  
+    if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 }, 
+      () => { // opt cb func that can update state right away 
+        console.log(this.state);
+      } ) // access to value 
   } // end of handleNxt 
-
-  private handlePrev = (): void => {
-      console.log(this.state);
-      this.setState( // setState is async, does not update state right away 
-          { currField: this.state.currField - 1 }, 
-          () => { // opt cb func that can update state right away 
-              console.log(this.state);
-          }
-      )
-  } // end of handlePrev 
 
   private handleHome = (): void => {
       this.setState( 
@@ -211,7 +151,7 @@ class App extends React.Component<{}, Istate> {
                       placeholder="Name"
                       onChange={this.onChange}
                       />
-                      {this.invalidNameValidation(this.state.name) ? <div>{ this.renderNameErrors() }</div> : <div></div>}
+                      {invalidNameValidation(this.state.name) ? <div>{ this.renderNameErrors() }</div> : <div></div>}
               </div>
       } else if (this.state.currField === 2) { // gender drop-down menu
           result = 
@@ -238,7 +178,7 @@ class App extends React.Component<{}, Istate> {
                           placeholder="Height"
                           onChange={this.onChangeNum}
                       />
-                      <div>{ this.invalidHeightValidation(this.state.height) ? <div>{this.renderHeightErrors()}</div> : <div></div> }</div>
+                      <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderHeightErrors()}</div> : <div></div> }</div>
                   </div>
       } else if ( this.state.currField === 4 ) { // weight field and weightValidation
           result = 
@@ -255,7 +195,7 @@ class App extends React.Component<{}, Istate> {
                       onChange={this.onChangeNum}
                   />
               </div>
-              <div>{ this.weightValidation(this.state.weight) ? this.renderWeightErrors() : <div></div> }</div>
+              <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? this.renderWeightErrors() : <div></div> }</div>
           </div>
       } else if ( this.state.currField === 5 ) { // review field and submit
           result = 
@@ -267,15 +207,16 @@ class App extends React.Component<{}, Istate> {
                   <button type="submit" className="submit">Submit Form</button>
               </div> 
       }
-      if ( this.state.currField === 0 ) nxtBtn = <button name="currField" onClick={this.handleNxt}>Next</button>
       if ( // shows btns based on currField 
           this.state.currField === 1 || 
           this.state.currField === 2 || 
           this.state.currField === 3 || 
           this.state.currField === 4 
       ) {
-          nxtBtn = <button name="currField" onClick={this.handleNxt}>Next</button>
-          prevBtn = <button name="currField" onClick={this.handlePrev}>Back</button>
+          nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
+          prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
+      } else {
+        nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
       }
       if ( this.state.isSubmitted) bmiResultMsg = <p>congrates, your bmi is {bmiResult}</p>
       if ( this.state.isSubmitted) homeBtn = <button name="currField" onClick={this.handleHome}>Home</button>
