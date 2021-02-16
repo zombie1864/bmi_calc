@@ -7,6 +7,9 @@ test('If name contains . or @ symbol, function should return true, invalid name'
     expect(invalidNameValidation('jeff.')).toBe(true)
     expect(invalidNameValidation('jeff@')).toBe(true)
     expect(invalidNameValidation('@jeff')).toBe(true)
+    expect(invalidNameValidation('jeff .varela')).toBe(true)
+    expect(invalidNameValidation('jeff @varela')).toBe(true)
+    expect(invalidNameValidation('jeff_varela')).toBe(false)
 })
 test('If name contains any email urls, function should return true, invalid name', async () => {
     expect(invalidNameValidation('jeff.com')).toBe(true)
