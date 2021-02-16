@@ -65,17 +65,6 @@ class App extends React.Component<{}, Istate> {
       }
   } // end of changeGender 
 
-  // private hasChar(numStr: number) {
-  //     console.log(numStr);
-      
-  //     let numStrHasChar = false 
-  //     if ( !(/^[0.0-9.99]+$/ ).test( (numStr).toString() ) ) {
-  //         numStrHasChar = true
-  //     }
-  //     console.log(numStrHasChar);
-  //     return numStrHasChar
-  // }
-
 /*****************************************************************************/
 // ----------------------------[ FORM VALIDATION ]----------------------------
 /*****************************************************************************/
@@ -103,16 +92,10 @@ class App extends React.Component<{}, Istate> {
       maxWeight:number = 600
     ): boolean { // aux method 
       let invalidNumber = false 
-      if (height < miniHeight || height > maxHeight ) {
-          invalidNumber = true 
-      }
-      if ( !(/^[0-9]+$/ ).test( (weight).toString() ) ) {
-        invalidNumber = true
-    }
-    if (weight < miniWeight || weight > maxWeight ) {
-      invalidNumber = true 
-    }
+      if (height < miniHeight || height > maxHeight ) invalidNumber = true 
       if (isNaN(height)) invalidNumber = true 
+      if (weight < miniWeight || weight > maxWeight ) invalidNumber = true 
+      if ( isNaN(weight) ) invalidNumber = true
       return invalidNumber
 
   } // end of invalidNumberValidation
@@ -266,7 +249,6 @@ class App extends React.Component<{}, Istate> {
                   <button type="submit" className="submit">Submit Form</button>
               </div> 
       }
-      if ( this.state.currField === 0 ) nxtBtn = <button name="currField" onClick={this.handleNxt}>Next</button>
       if ( // shows btns based on currField 
           this.state.currField === 1 || 
           this.state.currField === 2 || 
@@ -275,6 +257,8 @@ class App extends React.Component<{}, Istate> {
       ) {
           nxtBtn = <button name="currField" onClick={this.handleNxt}>Next</button>
           prevBtn = <button name="currField" onClick={this.handlePrev}>Back</button>
+      } else {
+        nxtBtn = <button name="currField" onClick={this.handleNxt}>Next</button>
       }
       if ( this.state.isSubmitted) bmiResultMsg = <p>congrates, your bmi is {bmiResult}</p>
       if ( this.state.isSubmitted) homeBtn = <button name="currField" onClick={this.handleHome}>Home</button>
