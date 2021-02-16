@@ -79,8 +79,7 @@ class App extends React.Component<{}, Istate> {
         // stop here 
     } else if ( this.state.currField === 4 && invalidNumberValidation(this.state.height, this.state.weight) ) {
         // stop here 
-    } 
-    if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 },     
+    } else if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 },     
       () => { // opt cb func that can update state right away 
         console.log(this.state);
       } )  
@@ -207,7 +206,9 @@ class App extends React.Component<{}, Istate> {
                   <button type="submit" className="submit">Submit Form</button>
               </div> 
       }
-      if ( // shows btns based on currField 
+      if ( this.state.currField === 0 ) {
+        nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
+      } else if ( // shows btns based on currField 
           this.state.currField === 1 || 
           this.state.currField === 2 || 
           this.state.currField === 3 || 
@@ -215,9 +216,7 @@ class App extends React.Component<{}, Istate> {
       ) {
           nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
           prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
-      } else {
-        nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
-      }
+      } 
       if ( this.state.isSubmitted) bmiResultMsg = <p>congrates, your bmi is {bmiResult}</p>
       if ( this.state.isSubmitted) homeBtn = <button name="currField" onClick={this.handleHome}>Home</button>
       return (
