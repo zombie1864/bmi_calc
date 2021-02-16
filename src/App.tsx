@@ -26,7 +26,7 @@ class App extends React.Component<{}, Istate> {
       };
       this.baseState = this.state
       this.onChange = this.onChange.bind(this); 
-      this.onSubmit = this.onSubmit.bind(this); 
+      // this.onSubmit = this.onSubmit.bind(this); 
       this.onChangeNum = this.onChangeNum.bind(this);
       this.changeGender = this.changeGender.bind(this);
   }
@@ -44,17 +44,6 @@ class App extends React.Component<{}, Istate> {
     const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
     this.setState( newState)
   } // end of onChangeNum
-
-  private onSubmit(event:any):void {
-      event.preventDefault()
-      if (this.state.currField === 5) {
-          console.log(this.state);
-          console.log('submitted');
-      } else {
-          console.log('cannot submit');
-      }
-      this.setState({ isSubmitted: true })
-  } // end of onSubmit 
 
   private changeGender(event:any):void {
       if ( event.target.value === 'true') {
@@ -97,15 +86,6 @@ class App extends React.Component<{}, Istate> {
       } ) // access to value 
   } // end of handleNxt 
 
-  private handleHome = (): void => {
-      this.setState( 
-          this.baseState, 
-          () => {
-              console.log(this.state);  
-          }
-      )
-  } // end of handleHome
-
 /*****************************************************************************/
 // ---------------------------------[ ERR ]---------------------------------
 /*****************************************************************************/
@@ -133,6 +113,7 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   public render():JSX.Element {
+      let intro 
       let result
       let nxtBtn 
       let prevBtn 
@@ -140,7 +121,7 @@ class App extends React.Component<{}, Istate> {
       let homeBtn
       const bmiResult = 703 * ( this.state.weight / ( ( this.state.height* 12 ) * ( this.state.height * 12 ) ) ) 
       if (this.state.currField === 0) {
-          result = 
+          intro = 
               <div>
                   <p>Greetings and welcome to BMI Calculator</p>
                   <p>Press next to enter your info to calcuate your bmi</p>
@@ -211,7 +192,7 @@ class App extends React.Component<{}, Istate> {
                   <p>Gender: { this.state.gender ? 'Male' : 'Female'}</p>
                   <p>Height: { this.state.height }</p>
                   <p>Weight: { this.state.weight }</p>
-                  <button type="submit" className="submit">Submit Form</button>
+                  <p>congrates, your bmi is {bmiResult}</p>
               </div> 
       }
       if ( this.state.currField === 0 ) {
@@ -225,11 +206,10 @@ class App extends React.Component<{}, Istate> {
           nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
           prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
       } 
-      if ( this.state.isSubmitted) bmiResultMsg = <p>congrates, your bmi is {bmiResult}</p>
-      if ( this.state.isSubmitted) homeBtn = <button name="currField" onClick={this.handleHome}>Home</button>
       return ( // rendering happens here 
           <div className="form-content-right">
-              <form className="form" onSubmit={this.onSubmit}>
+              <form className="form">
+                  {intro}
                   {result}
                   {bmiResultMsg}
                   {homeBtn}
