@@ -12,7 +12,6 @@ interface Istate {
 }
 
 class App extends React.Component<{}, Istate> { 
-  private baseState: object
   public constructor(props: Istate) {
       super(props);
       this.state = {
@@ -24,11 +23,7 @@ class App extends React.Component<{}, Istate> {
           genderSelected: false,
           isSubmitted: false
       };
-      this.baseState = this.state
       this.onChange = this.onChange.bind(this); 
-      this.onSubmit = this.onSubmit.bind(this); 
-      this.onChangeNum = this.onChangeNum.bind(this);
-      this.changeGender = this.changeGender.bind(this);
   }
 
 /*****************************************************************************/
@@ -36,35 +31,20 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange( event:{ target: { name: any; value: any; } } ):void {
-      const newState = { [event.target.name]: event.target.value } as Pick<Istate, keyof Istate>;
-      this.setState( newState)
+    if ( this.state.currField !== 1 ) {
+      const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
+      this.setState( newState ) // updates state for either height or weight 
+    } else if ( this.state.currField === 1 ) {
+      this.setState( { name: event.target.value } ) // updates state only for name 
+    }
+    if ( this.state.currField === 2 && event.target.value === 'true' ) {
+      this.setState({ gender: true });
+      this.setState({ genderSelected: true } )
+    } else if ( this.state.currField === 2 && event.target.value === 'false' ) {
+      this.setState({ gender: false });
+      this.setState({ genderSelected: true } )
+    }
   } // end of onChange 
-
-  private onChangeNum( event:{ target: { name: any; value: any; } } ):void {
-    const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
-    this.setState( newState)
-  } // end of onChangeNum
-
-  private onSubmit(event:any):void {
-      event.preventDefault()
-      if (this.state.currField === 5) {
-          console.log(this.state);
-          console.log('submitted');
-      } else {
-          console.log('cannot submit');
-      }
-      this.setState({ isSubmitted: true })
-  } // end of onSubmit 
-
-  private changeGender(event:any):void {
-      if ( event.target.value === 'true') {
-          this.setState({ gender: true });
-          this.setState({ genderSelected: true })
-      } else {
-          this.setState({ gender: false });
-          this.setState({ genderSelected: true })
-      }
-  } // end of changeGender 
   
 /*****************************************************************************/
 // ---------------------------------[ BTNS ]---------------------------------
@@ -87,44 +67,25 @@ class App extends React.Component<{}, Istate> {
         invalidNumberValidation(this.state.height, this.state.weight) 
       ) {
         // stop here 
-    } else if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 },     
-      () => { // opt cb func that can update state right away 
-        // console.log(this.state);
-      } )  
-    if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 }, 
-      () => { // opt cb func that can update state right away 
-        // console.log(this.state);
-      } ) // access to value 
+    } else if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )  
+    if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
   } // end of handleNxt 
-
-  private handleHome = (): void => {
-      this.setState( 
-          this.baseState, 
-          () => {
-              console.log(this.state);  
-          }
-      )
-  } // end of handleHome
 
 /*****************************************************************************/
 // ---------------------------------[ ERR ]---------------------------------
 /*****************************************************************************/
 
-  private renderNameErrors():JSX.Element { // renders err
+  private renderErrors():any { // renders err
+    let errMsg
+    if ( invalidNameValidation(this.state.name) ) {
+      errMsg = <p>Please enter a valid name</p>
+    } else if (invalidNumberValidation(this.state.height, this.state.weight)) {
+      errMsg =  <p>Please enter a valid height</p>
+    } else if (invalidNumberValidation(this.state.height, this.state.weight)) {
+      errMsg =  <p>Please enter a valid weight</p>
+    }
       return (
-          <p>Please enter a valid name</p>
-      )
-  }
-
-  private renderHeightErrors():JSX.Element { // renders err
-      return (
-          <p>Please enter a valid height</p>
-      )
-  }
-
-  private renderWeightErrors():JSX.Element { // renders err
-      return (
-          <p>Please enter a valid weight</p>
+        errMsg
       )
   }
 
@@ -133,6 +94,7 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   public render():JSX.Element {
+      let intro 
       let result
       let nxtBtn 
       let prevBtn 
@@ -140,7 +102,7 @@ class App extends React.Component<{}, Istate> {
       let homeBtn
       const bmiResult = 703 * ( this.state.weight / ( ( this.state.height* 12 ) * ( this.state.height * 12 ) ) ) 
       if (this.state.currField === 0) {
-          result = 
+          intro = 
               <div>
                   <p>Greetings and welcome to BMI Calculator</p>
                   <p>Press next to enter your info to calcuate your bmi</p>
@@ -158,7 +120,7 @@ class App extends React.Component<{}, Istate> {
                       placeholder="Name"
                       onChange={this.onChange}
                       />
-                      {invalidNameValidation(this.state.name) ? <div>{ this.renderNameErrors() }</div> : <div></div>}
+                      {invalidNameValidation(this.state.name) ? <div>{ this.renderErrors() }</div> : <div></div>}
               </div>
       } else if (this.state.currField === 2) { // gender drop-down menu
           result = 
@@ -166,7 +128,7 @@ class App extends React.Component<{}, Istate> {
                   <label htmlFor="gender" className="form-label">
                       Gender:
                   </label>
-                  <select name="gender" className="genderOpt" onChange={this.changeGender}>
+                  <select name="gender" className="genderOpt" onChange={this.onChange}>
                       <option> -- select an option -- </option>
                       <option value='true'>Male</option>
                       <option value='false'>Female</option>
@@ -183,9 +145,9 @@ class App extends React.Component<{}, Istate> {
                           name="height"
                           className="form-input"
                           placeholder="Height"
-                          onChange={this.onChangeNum}
+                          onChange={this.onChange}
                       />
-                      <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderHeightErrors()}</div> : <div></div> }</div>
+                      <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderErrors()}</div> : <div></div> }</div>
                   </div>
       } else if ( this.state.currField === 4 ) { // weight field and weightValidation
           result = 
@@ -199,10 +161,10 @@ class App extends React.Component<{}, Istate> {
                       name="weight"
                       className="form-input"
                       placeholder="Weight"
-                      onChange={this.onChangeNum}
+                      onChange={this.onChange}
                   />
               </div>
-              <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? this.renderWeightErrors() : <div></div> }</div>
+              <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? this.renderErrors() : <div></div> }</div>
           </div>
       } else if ( this.state.currField === 5 ) { // review field and submit
           result = 
@@ -211,7 +173,7 @@ class App extends React.Component<{}, Istate> {
                   <p>Gender: { this.state.gender ? 'Male' : 'Female'}</p>
                   <p>Height: { this.state.height }</p>
                   <p>Weight: { this.state.weight }</p>
-                  <button type="submit" className="submit">Submit Form</button>
+                  <p>congrates, your bmi is {bmiResult}</p>
               </div> 
       }
       if ( this.state.currField === 0 ) {
@@ -225,11 +187,10 @@ class App extends React.Component<{}, Istate> {
           nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
           prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
       } 
-      if ( this.state.isSubmitted) bmiResultMsg = <p>congrates, your bmi is {bmiResult}</p>
-      if ( this.state.isSubmitted) homeBtn = <button name="currField" onClick={this.handleHome}>Home</button>
       return ( // rendering happens here 
           <div className="form-content-right">
-              <form className="form" onSubmit={this.onSubmit}>
+              <form className="form">
+                  {intro}
                   {result}
                   {bmiResultMsg}
                   {homeBtn}
