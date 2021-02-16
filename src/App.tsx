@@ -34,9 +34,9 @@ class App extends React.Component<{}, Istate> {
   private onChange( event:{ target: { name: any; value: any; } } ):void {
     if ( this.state.currField !== 1 ) {
       const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
-      this.setState( newState, () => console.log(this.state)) // updates state for either height or weight 
+      this.setState( newState ) // updates state for either height or weight 
     } else if ( this.state.currField === 1 ) {
-      this.setState( { name: event.target.value }, () => console.log(this.state)) // updates state only for name 
+      this.setState( { name: event.target.value } ) // updates state only for name 
     }
   } // end of onChange 
 
@@ -71,35 +71,25 @@ class App extends React.Component<{}, Istate> {
         invalidNumberValidation(this.state.height, this.state.weight) 
       ) {
         // stop here 
-    } else if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 },     
-      () => { // opt cb func that can update state right away 
-        // console.log(this.state);
-      } )  
-    if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 }, 
-      () => { // opt cb func that can update state right away 
-        // console.log(this.state);
-      } ) // access to value 
+    } else if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )  
+    if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
   } // end of handleNxt 
 
 /*****************************************************************************/
 // ---------------------------------[ ERR ]---------------------------------
 /*****************************************************************************/
 
-  private renderNameErrors():JSX.Element { // renders err
+  private renderErrors():any { // renders err
+    let errMsg
+    if ( invalidNameValidation(this.state.name) ) {
+      errMsg = <p>Please enter a valid name</p>
+    } else if (invalidNumberValidation(this.state.height, this.state.weight)) {
+      errMsg =  <p>Please enter a valid height</p>
+    } else if (invalidNumberValidation(this.state.height, this.state.weight)) {
+      errMsg =  <p>Please enter a valid weight</p>
+    }
       return (
-          <p>Please enter a valid name</p>
-      )
-  }
-
-  private renderHeightErrors():JSX.Element { // renders err
-      return (
-          <p>Please enter a valid height</p>
-      )
-  }
-
-  private renderWeightErrors():JSX.Element { // renders err
-      return (
-          <p>Please enter a valid weight</p>
+        errMsg
       )
   }
 
@@ -134,7 +124,7 @@ class App extends React.Component<{}, Istate> {
                       placeholder="Name"
                       onChange={this.onChange}
                       />
-                      {invalidNameValidation(this.state.name) ? <div>{ this.renderNameErrors() }</div> : <div></div>}
+                      {invalidNameValidation(this.state.name) ? <div>{ this.renderErrors() }</div> : <div></div>}
               </div>
       } else if (this.state.currField === 2) { // gender drop-down menu
           result = 
@@ -161,7 +151,7 @@ class App extends React.Component<{}, Istate> {
                           placeholder="Height"
                           onChange={this.onChange}
                       />
-                      <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderHeightErrors()}</div> : <div></div> }</div>
+                      <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderErrors()}</div> : <div></div> }</div>
                   </div>
       } else if ( this.state.currField === 4 ) { // weight field and weightValidation
           result = 
@@ -178,7 +168,7 @@ class App extends React.Component<{}, Istate> {
                       onChange={this.onChange}
                   />
               </div>
-              <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? this.renderWeightErrors() : <div></div> }</div>
+              <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? this.renderErrors() : <div></div> }</div>
           </div>
       } else if ( this.state.currField === 5 ) { // review field and submit
           result = 
