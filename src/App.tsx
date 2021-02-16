@@ -24,7 +24,6 @@ class App extends React.Component<{}, Istate> {
           isSubmitted: false
       };
       this.onChange = this.onChange.bind(this); 
-      this.changeGender = this.changeGender.bind(this);
   }
 
 /*****************************************************************************/
@@ -38,17 +37,14 @@ class App extends React.Component<{}, Istate> {
     } else if ( this.state.currField === 1 ) {
       this.setState( { name: event.target.value } ) // updates state only for name 
     }
+    if ( this.state.currField === 2 && event.target.value === 'true' ) {
+      this.setState({ gender: true });
+      this.setState({ genderSelected: true } )
+    } else if ( this.state.currField === 2 && event.target.value === 'false' ) {
+      this.setState({ gender: false });
+      this.setState({ genderSelected: true } )
+    }
   } // end of onChange 
-
-  private changeGender(event:any):void {
-      if ( event.target.value === 'true') {
-          this.setState({ gender: true });
-          this.setState({ genderSelected: true })
-      } else {
-          this.setState({ gender: false });
-          this.setState({ genderSelected: true })
-      }
-  } // end of changeGender 
   
 /*****************************************************************************/
 // ---------------------------------[ BTNS ]---------------------------------
@@ -132,7 +128,7 @@ class App extends React.Component<{}, Istate> {
                   <label htmlFor="gender" className="form-label">
                       Gender:
                   </label>
-                  <select name="gender" className="genderOpt" onChange={this.changeGender}>
+                  <select name="gender" className="genderOpt" onChange={this.onChange}>
                       <option> -- select an option -- </option>
                       <option value='true'>Male</option>
                       <option value='false'>Female</option>
