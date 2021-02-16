@@ -32,12 +32,11 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange( event:{ target: { name: any; value: any; } } ):void {
-    let onlyNumbers = /^[0.0-9.0]+$/ 
-    if ( onlyNumbers.test( event.target.value ) ) {
+    if ( this.state.currField !== 1 ) {
       const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
-      this.setState( newState ) // updates state for either height or weight 
-    } else {
-      this.setState( { name: event.target.value } ) // updates state only for name 
+      this.setState( newState, () => console.log(this.state)) // updates state for either height or weight 
+    } else if ( this.state.currField === 1 ) {
+      this.setState( { name: event.target.value }, () => console.log(this.state)) // updates state only for name 
     }
   } // end of onChange 
 
