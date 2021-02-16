@@ -41,8 +41,8 @@ class App extends React.Component<{}, Istate> {
   } // end of onChange 
 
   private onChangeNum( event:{ target: { name: any; value: any; } } ):void {
-      const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
-      this.setState( newState)
+    const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
+    this.setState( newState)
   } // end of onChangeNum
 
   private onSubmit(event:any):void {
@@ -75,17 +75,25 @@ class App extends React.Component<{}, Istate> {
         // stop here 
     } else if ( this.state.currField === 2 && !this.state.genderSelected ) {
         // stop here 
-    } else if ( this.state.currField === 3 && invalidNumberValidation(this.state.height, this.state.weight)) {
+    } else if ( 
+        this.state.currField === 3 && 
+        this.state.height === 3.0 ||
+        invalidNumberValidation(this.state.height, this.state.weight) 
+      ) {
         // stop here 
-    } else if ( this.state.currField === 4 && invalidNumberValidation(this.state.height, this.state.weight) ) {
+    } else if ( 
+        this.state.currField === 4 && 
+        this.state.weight === 60 || 
+        invalidNumberValidation(this.state.height, this.state.weight) 
+      ) {
         // stop here 
     } else if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 },     
       () => { // opt cb func that can update state right away 
-        console.log(this.state);
+        // console.log(this.state);
       } )  
     if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 }, 
       () => { // opt cb func that can update state right away 
-        console.log(this.state);
+        // console.log(this.state);
       } ) // access to value 
   } // end of handleNxt 
 
@@ -219,7 +227,7 @@ class App extends React.Component<{}, Istate> {
       } 
       if ( this.state.isSubmitted) bmiResultMsg = <p>congrates, your bmi is {bmiResult}</p>
       if ( this.state.isSubmitted) homeBtn = <button name="currField" onClick={this.handleHome}>Home</button>
-      return (
+      return ( // rendering happens here 
           <div className="form-content-right">
               <form className="form" onSubmit={this.onSubmit}>
                   {result}
@@ -229,7 +237,7 @@ class App extends React.Component<{}, Istate> {
               {nxtBtn}
               {prevBtn}
           </div>
-      )
+      ) // rendering happens here 
   }
 }
 
