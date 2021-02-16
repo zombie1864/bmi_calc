@@ -90,6 +90,48 @@ class App extends React.Component<{}, Istate> {
   }
 
 /*****************************************************************************/
+// ------------------------------[ AUX METHODS ]------------------------------
+/*****************************************************************************/
+
+private htmlResult(currField:number):any {
+  const formFields = ['name', 'gender', 'height', 'weight']; 
+  const genderTypes = ['female', 'male', 'unknown']
+  let htmlRes
+  let idx = currField - 1 
+  if ( idx === 1 ) {
+    genderTypes.map( gender => {
+      // WORK ON THIS 
+    })
+    htmlRes = 
+        <div>
+          <label htmlFor="gender" className="form-label">
+            Gender:
+          </label>
+          <select name="gender" className="genderOpt" onChange={this.onChange}>
+            <option> -- select an option -- </option>
+            <option value='true'>Male</option>
+            <option value='false'>Female</option>
+          </select>
+
+        </div>
+  } else {
+    htmlRes = 
+        <div>
+          <label htmlFor={`${formFields[idx]}`} className="form-label">
+            {formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}:
+          </label>
+          <input 
+            type="text" 
+            name={`${formFields[idx]}`}
+            placeholder={`${formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}`}
+            onChange={this.onChange}
+            />
+        </div>
+  }
+  return htmlRes
+}
+
+/*****************************************************************************/
 // ---------------------------------[ RENDER ]---------------------------------
 /*****************************************************************************/
 
@@ -110,59 +152,25 @@ class App extends React.Component<{}, Istate> {
       } else if (this.state.currField === 1) { // name field and invalidNameValidation 
           result = 
               <div className="form-inputs">
-                  <label htmlFor="name" className="form-label">
-                      Name:
-                  </label>
-                  <input 
-                      type="text" 
-                      name="name"
-                      className="form-input"
-                      placeholder="Name"
-                      onChange={this.onChange}
-                      />
-                      {invalidNameValidation(this.state.name) ? <div>{ this.renderErrors() }</div> : <div></div>}
-              </div>
+                {this.htmlResult(this.state.currField)}
+                {invalidNameValidation(this.state.name) ? <div>{ this.renderErrors() }</div> : <div></div>}
+              </div> 
       } else if (this.state.currField === 2) { // gender drop-down menu
-          result = 
+        result = 
               <div className="form-inputs">
-                  <label htmlFor="gender" className="form-label">
-                      Gender:
-                  </label>
-                  <select name="gender" className="genderOpt" onChange={this.onChange}>
-                      <option> -- select an option -- </option>
-                      <option value='true'>Male</option>
-                      <option value='false'>Female</option>
-                  </select>
+                {this.htmlResult(this.state.currField)}
               </div>
       } else if (this.state.currField === 3 ) { // height feild and heightValidation 
-              result = 
+              result =  
                   <div className="form-inputs">
-                      <label htmlFor="height" className="form-label">
-                          Height:
-                      </label>
-                      <input 
-                          type="text" 
-                          name="height"
-                          className="form-input"
-                          placeholder="Height"
-                          onChange={this.onChange}
-                      />
+                      {this.htmlResult(this.state.currField)}
                       <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderErrors()}</div> : <div></div> }</div>
-                  </div>
+                  </div> 
       } else if ( this.state.currField === 4 ) { // weight field and weightValidation
           result = 
           <div>
               <div className="form-inputs">
-                  <label htmlFor="weight" className="form-label">
-                      Weight:
-                  </label>
-                  <input 
-                      type="text" 
-                      name="weight"
-                      className="form-input"
-                      placeholder="Weight"
-                      onChange={this.onChange}
-                  />
+                {this.htmlResult(this.state.currField)}
               </div>
               <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? this.renderErrors() : <div></div> }</div>
           </div>
