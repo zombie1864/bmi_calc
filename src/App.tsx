@@ -12,7 +12,6 @@ interface Istate {
 }
 
 class App extends React.Component<{}, Istate> { 
-  private baseState: object
   public constructor(props: Istate) {
       super(props);
       this.state = {
@@ -24,10 +23,7 @@ class App extends React.Component<{}, Istate> {
           genderSelected: false,
           isSubmitted: false
       };
-      this.baseState = this.state
       this.onChange = this.onChange.bind(this); 
-      // this.onSubmit = this.onSubmit.bind(this); 
-      this.onChangeNum = this.onChangeNum.bind(this);
       this.changeGender = this.changeGender.bind(this);
   }
 
@@ -36,14 +32,14 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange( event:{ target: { name: any; value: any; } } ):void {
-      const newState = { [event.target.name]: event.target.value } as Pick<Istate, keyof Istate>;
-      this.setState( newState)
+    let onlyNumbers = /^[0.0-9.0]+$/ 
+    if ( onlyNumbers.test( event.target.value ) ) {
+      const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
+      this.setState( newState ) // updates state for either height or weight 
+    } else {
+      this.setState( { name: event.target.value } ) // updates state only for name 
+    }
   } // end of onChange 
-
-  private onChangeNum( event:{ target: { name: any; value: any; } } ):void {
-    const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
-    this.setState( newState)
-  } // end of onChangeNum
 
   private changeGender(event:any):void {
       if ( event.target.value === 'true') {
@@ -164,7 +160,7 @@ class App extends React.Component<{}, Istate> {
                           name="height"
                           className="form-input"
                           placeholder="Height"
-                          onChange={this.onChangeNum}
+                          onChange={this.onChange}
                       />
                       <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderHeightErrors()}</div> : <div></div> }</div>
                   </div>
@@ -180,7 +176,7 @@ class App extends React.Component<{}, Istate> {
                       name="weight"
                       className="form-input"
                       placeholder="Weight"
-                      onChange={this.onChangeNum}
+                      onChange={this.onChange}
                   />
               </div>
               <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? this.renderWeightErrors() : <div></div> }</div>
