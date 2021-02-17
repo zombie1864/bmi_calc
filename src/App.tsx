@@ -93,41 +93,45 @@ class App extends React.Component<{}, Istate> {
 // ------------------------------[ AUX METHODS ]------------------------------
 /*****************************************************************************/
 
-private htmlResult(currField:number):any {
-  const formFields = ['name', 'gender', 'height', 'weight']; 
-  const genderTypes = [
-    { value: 'true', label: 'Male' },
-    { value: 'false', label: 'Female' }
-  ]
-  let htmlRes
-  let idx = currField - 1 
-  if ( idx === 1 ) {
-    htmlRes = 
-        <div>
-          <label htmlFor="gender" className="form-label">
-            Gender:
-          </label>
-          <select name="gender" className="genderOpt" onChange={this.onChange}>
-            <option> -- select an option -- </option>
-            {genderTypes.map(({ value, label }) => <option value={value}  key = { value }>{label}</option>)}
-          </select>
-        </div>
-  } else {
-    htmlRes = 
-        <div>
-          <label htmlFor={`${formFields[idx]}`} className="form-label">
-            {formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}:
-          </label>
-          <input 
-            type="text" 
-            name={`${formFields[idx]}`}
-            placeholder={`${formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}`}
-            onChange={this.onChange}
-            />
-        </div>
+  private htmlResult(currField:number):any {
+    const formFields = ['name', 'gender', 'height', 'weight']; 
+    const genderTypes = [
+      { value: 'true', label: 'Male' },
+      { value: 'false', label: 'Female' }
+    ]
+    let htmlRes
+    let idx = currField - 1 
+    if ( idx === 1 ) {
+      htmlRes = 
+          <div>
+            <label htmlFor="gender" className="form-label">
+              Gender:
+            </label>
+            <select name="gender" className="genderOpt" onChange={this.onChange}>
+              <option> -- select an option -- </option>
+              {genderTypes.map(({ value, label }) => <option value={value}  key = { value }>{label}</option>)}
+            </select>
+          </div>
+    } else {
+      htmlRes = 
+          <div>
+            <label htmlFor={`${formFields[idx]}`} className="form-label">
+              {formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}:
+            </label>
+            <input 
+              type="text" 
+              name={`${formFields[idx]}`}
+              placeholder={`${formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}`}
+              onChange={this.onChange}
+              />
+          </div>
+    }
+    return htmlRes
   }
-  return htmlRes
-}
+
+  private bmiResult(height:number, weight:number):number {
+    return 703 * ( ( weight) / ( (12 * height) ** 2 ) )
+  }
 
 /*****************************************************************************/
 // ---------------------------------[ RENDER ]---------------------------------
@@ -140,7 +144,6 @@ private htmlResult(currField:number):any {
       let prevBtn 
       let bmiResultMsg
       let homeBtn
-      const bmiResult = 703 * ( this.state.weight / ( ( this.state.height* 12 ) * ( this.state.height * 12 ) ) ) 
       if (this.state.currField === 0) {
           intro = 
               <div>
@@ -179,7 +182,7 @@ private htmlResult(currField:number):any {
                   <p>Gender: { this.state.gender ? 'Male' : 'Female'}</p>
                   <p>Height: { this.state.height }</p>
                   <p>Weight: { this.state.weight }</p>
-                  <p>congrates, your bmi is {bmiResult}</p>
+                  <p>congrates, your bmi is {this.bmiResult(this.state.height, this.state.weight)}</p>
               </div> 
       }
       if ( this.state.currField === 0 ) {
