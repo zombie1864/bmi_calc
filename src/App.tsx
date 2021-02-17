@@ -7,6 +7,7 @@ interface Istate {
   height: number, 
   weight: number,
   currField: number, 
+  allowNext: boolean, 
   genderSelected: boolean, 
   isSubmitted: boolean
 }
@@ -20,6 +21,7 @@ class App extends React.Component<{}, Istate> {
           height: 3.0, 
           weight: 60, 
           currField: 0, 
+          allowNext: true, 
           genderSelected: false,
           isSubmitted: false
       };
@@ -51,23 +53,15 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private handleOnClick = (event: any): void => { // onClicks have events 
-    if ( ( this.state.currField === 1 && this.state.name === '') || invalidNameValidation(this.state.name) ) { 
-        // stop here 
-    } else if ( this.state.currField === 2 && !this.state.genderSelected ) {
-        // stop here 
-    } else if ( 
-        this.state.currField === 3 && 
-        this.state.height === 3.0 ||
-        invalidNumberValidation(this.state.height, this.state.weight) 
-      ) {
-        // stop here 
-    } else if ( 
-        this.state.currField === 4 && 
-        this.state.weight === 60 || 
-        invalidNumberValidation(this.state.height, this.state.weight) 
-      ) {
-        // stop here 
-    } else if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )  
+    if ( 
+      this.state.allowNext === invalidNameValidation(this.state.name) ||
+      this.state.allowNext ===  invalidNumberValidation(this.state.height, this.state.weight) || 
+      this.state.currField === 1 && this.state.name === '' || 
+      this.state.currField === 2 && !this.state.genderSelected  ||
+      this.state.currField === 3 && this.state.height === 3.0 || 
+      this.state.currField === 4 && this.state.weight === 60 
+    ) return 
+    if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )  
     if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
   } // end of handleNxt 
 

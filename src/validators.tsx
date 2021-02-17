@@ -1,7 +1,6 @@
 export const invalidNameValidation = (name:string):boolean => { // aux method
     let inValidName = false 
     const emailUrlsAndSymbols = ['.com', '.co', '.io', '.net', '.edu', '@', '.']
-
     if (name.indexOf(' ') === 0) inValidName = true
     emailUrlsAndSymbols.forEach( el => {
         if ( name.includes(el) ) inValidName = true
