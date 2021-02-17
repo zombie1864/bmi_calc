@@ -95,13 +95,13 @@ class App extends React.Component<{}, Istate> {
 
 private htmlResult(currField:number):any {
   const formFields = ['name', 'gender', 'height', 'weight']; 
-  const genderTypes = ['female', 'male', 'unknown']
+  const genderTypes = [
+    { value: 'true', label: 'Male' },
+    { value: 'false', label: 'Female' }
+  ]
   let htmlRes
   let idx = currField - 1 
   if ( idx === 1 ) {
-    genderTypes.map( gender => {
-      // WORK ON THIS 
-    })
     htmlRes = 
         <div>
           <label htmlFor="gender" className="form-label">
@@ -109,10 +109,8 @@ private htmlResult(currField:number):any {
           </label>
           <select name="gender" className="genderOpt" onChange={this.onChange}>
             <option> -- select an option -- </option>
-            <option value='true'>Male</option>
-            <option value='false'>Female</option>
+            {genderTypes.map(({ value, label }) => <option value={value}  key = { value }>{label}</option>)}
           </select>
-
         </div>
   } else {
     htmlRes = 
