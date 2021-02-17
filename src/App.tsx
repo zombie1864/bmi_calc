@@ -118,6 +118,7 @@ class App extends React.Component<{}, Istate> {
               placeholder={`${formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}`}
               onChange={this.onChange}
               />
+              {}
           </div>
     }
     return htmlRes
@@ -144,27 +145,24 @@ class App extends React.Component<{}, Istate> {
                   <p>Greetings and welcome to BMI Calculator</p>
                   <p>Press next to enter your info to calcuate your bmi</p>
               </div>
-      } else if (this.state.currField === 1) { // name field and invalidNameValidation 
+      } else if (this.state.currField === 1) { // name field and invalidNameValidation REDUNDANT_MAYBE????
           result = 
-              <div className="form-inputs">
+              <div>
                 {this.htmlResult(this.state.currField)}
                 {invalidNameValidation(this.state.name) ? <div>{ this.renderErrors() }</div> : <div></div>}
               </div> 
       } else if (this.state.currField === 2) { // gender drop-down menu
-        result = 
-              <div className="form-inputs">
-                {this.htmlResult(this.state.currField)}
-              </div>
-      } else if (this.state.currField === 3 ) { // height feild and heightValidation 
-              result =  
-                  <div className="form-inputs">
-                      {this.htmlResult(this.state.currField)}
-                      <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderErrors()}</div> : <div></div> }</div>
-                  </div> 
-      } else if ( this.state.currField === 4 ) { // weight field and weightValidation
+          result = this.htmlResult(this.state.currField)
+      } else if (this.state.currField === 3 ) { // height feild and heightValidation REDUNDANT_MAYBE????
+          result =  
+              <div>
+                  {this.htmlResult(this.state.currField)}
+                  { invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderErrors()}</div> : <div></div> }
+              </div> 
+      } else if ( this.state.currField === 4 ) { // weight field and weightValidation REDUNDANT_MAYBE????
           result = 
           <div>
-              <div className="form-inputs">
+              <div>
                 {this.htmlResult(this.state.currField)}
               </div>
               <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? this.renderErrors() : <div></div> }</div>
