@@ -53,16 +53,16 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private handleOnClick = (event: any): void => { // onClicks have events 
+    if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
     if ( 
       this.state.allowNext === invalidNameValidation(this.state.name) ||
       this.state.allowNext ===  invalidNumberValidation(this.state.height, this.state.weight) || 
-      this.state.currField === 1 && this.state.name === '' || 
-      this.state.currField === 2 && !this.state.genderSelected  ||
-      this.state.currField === 3 && this.state.height === 3.0 || 
-      this.state.currField === 4 && this.state.weight === 60 
+      ( this.state.currField === 1 && this.state.name === '' ) || 
+      ( this.state.currField === 2 && !this.state.genderSelected ) ||
+      ( this.state.currField === 3 && this.state.height === 3.0 )|| 
+      ( this.state.currField === 4 && this.state.weight === 60 )
     ) return 
-    if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )  
-    if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
+    if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )
   } // end of handleNxt 
 
 /*****************************************************************************/
@@ -118,7 +118,7 @@ class App extends React.Component<{}, Istate> {
               placeholder={`${formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}`}
               onChange={this.onChange}
               />
-              {}
+              {}{/* maybe adding the err handlers here ??  */}
           </div>
     }
     return htmlRes
