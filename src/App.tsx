@@ -36,6 +36,9 @@ class App extends React.Component<{}, Istate> {
     if ( this.state.currField !== 1 ) {
       const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
       this.setState( newState ) // updates state for either height or weight 
+      // CLEAR TXT FIELD HERE 
+      // event.target.reset(); 
+      // CLEAR TXT FIELD HERE 
     } else if ( this.state.currField === 1 ) {
       this.setState( { name: event.target.value } ) // updates state only for name 
     }
@@ -117,8 +120,13 @@ class App extends React.Component<{}, Istate> {
               name={`${formFields[idx]}`}
               placeholder={`${formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}`}
               onChange={this.onChange}
+              id="myInput"
               />
-              {}{/* maybe adding the err handlers here ??  */}
+              { invalidNameValidation(this.state.name) ? 
+              <div>{ this.renderErrors() }</div> 
+              : invalidNumberValidation(this.state.height, this.state.weight) ?
+              <div>{this.renderErrors()}</div> 
+              : <div></div>}
           </div>
     }
     return htmlRes
@@ -145,28 +153,10 @@ class App extends React.Component<{}, Istate> {
                   <p>Greetings and welcome to BMI Calculator</p>
                   <p>Press next to enter your info to calcuate your bmi</p>
               </div>
-      } else if (this.state.currField === 1) { // name field and invalidNameValidation REDUNDANT_MAYBE????
-          result = 
-              <div>
-                {this.htmlResult(this.state.currField)}
-                {invalidNameValidation(this.state.name) ? <div>{ this.renderErrors() }</div> : <div></div>}
-              </div> 
-      } else if (this.state.currField === 2) { // gender drop-down menu
-          result = this.htmlResult(this.state.currField)
-      } else if (this.state.currField === 3 ) { // height feild and heightValidation REDUNDANT_MAYBE????
-          result =  
-              <div>
-                  {this.htmlResult(this.state.currField)}
-                  { invalidNumberValidation(this.state.height, this.state.weight) ? <div>{this.renderErrors()}</div> : <div></div> }
-              </div> 
-      } else if ( this.state.currField === 4 ) { // weight field and weightValidation REDUNDANT_MAYBE????
-          result = 
-          <div>
-              <div>
-                {this.htmlResult(this.state.currField)}
-              </div>
-              <div>{ invalidNumberValidation(this.state.height, this.state.weight) ? this.renderErrors() : <div></div> }</div>
-          </div>
+      // EXPERIMENTAL_SECTION => THIS REMOVES BUGGY BEHAVIOR 
+      // } else if (this.state.currField === 4) {
+      //   result = <div>{this.htmlResult(this.state.currField)}</div>
+      // EXPERIMENTAL_SECTION => THIS REMOVES BUGGY BEHAVIOR 
       } else if ( this.state.currField === 5 ) { // review field and submit
           result = 
               <div>
@@ -176,6 +166,8 @@ class App extends React.Component<{}, Istate> {
                   <p>Weight: { this.state.weight }</p>
                   <p>congrates, your bmi is {this.bmiResult(this.state.height, this.state.weight)}</p>
               </div> 
+      } else {
+        result = <div>{this.htmlResult(this.state.currField)}</div>
       }
       if ( this.state.currField === 0 ) {
         nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
