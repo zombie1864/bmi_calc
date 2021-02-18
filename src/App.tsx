@@ -183,8 +183,6 @@ class App extends React.Component<{}, Istate> {
           nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
           prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
       } 
-      console.log('State:', this.state);
-      
       return ( // rendering happens here JSX 
           <div className="form-content-right">
               <form className="form">
