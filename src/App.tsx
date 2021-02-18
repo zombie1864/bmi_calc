@@ -9,7 +9,8 @@ interface Istate {
   currField: number, 
   allowNext: boolean, 
   genderSelected: boolean, 
-  isSubmitted: boolean
+  isSubmitted: boolean, 
+  value: string// Possibily the solution 
 }
 
 class App extends React.Component<{}, Istate> { 
@@ -23,7 +24,8 @@ class App extends React.Component<{}, Istate> {
           currField: 0, 
           allowNext: true, 
           genderSelected: false,
-          isSubmitted: false
+          isSubmitted: false, 
+          value: ''// Possibily the solution 
       };
       this.onChange = this.onChange.bind(this); 
   }
@@ -33,20 +35,25 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange( event:{ target: { name: any; value: any; } } ):void {
+    // EXPERIMENTAL 
+    let name = event.target.name 
+    let value = event.target.value 
+    console.log(name, 'the value being collected by user input is:', value );
+    // let diffState = { [name]:value } as Pick<Istate, keyof Istate>;
+    // this.setState({ [name]: value } as Istate );
+    // this.setState({ value: value } );
+    // EXPERIMENTAL 
     if ( this.state.currField !== 1 ) {
       const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
       this.setState( newState ) // updates state for either height or weight 
-      // CLEAR TXT FIELD HERE 
-      // event.target.reset(); 
-      // CLEAR TXT FIELD HERE 
     } else if ( this.state.currField === 1 ) {
       this.setState( { name: event.target.value } ) // updates state only for name 
     }
     if ( this.state.currField === 2 && event.target.value === 'true' ) {
-      this.setState({ gender: true });
+      this.setState({ gender: event.target.value });
       this.setState({ genderSelected: true } )
     } else if ( this.state.currField === 2 && event.target.value === 'false' ) {
-      this.setState({ gender: false });
+      this.setState({ gender: event.target.value });
       this.setState({ genderSelected: true } )
     }
   } // end of onChange 
@@ -120,7 +127,10 @@ class App extends React.Component<{}, Istate> {
               name={`${formFields[idx]}`}
               placeholder={`${formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}`}
               onChange={this.onChange}
-              id="myInput"
+              value={this.state.value} // Possibily the solution 
+              // value={this.state.name} // Possibily the solution 
+              // value={this.state.height} // Possibily the solution 
+              // value={this.state.weight} // Possibily the solution 
               />
               { invalidNameValidation(this.state.name) ? 
               <div>{ this.renderErrors() }</div> 
@@ -167,7 +177,7 @@ class App extends React.Component<{}, Istate> {
                   <p>congrates, your bmi is {this.bmiResult(this.state.height, this.state.weight)}</p>
               </div> 
       } else {
-        result = <div>{this.htmlResult(this.state.currField)}</div>
+        result = this.htmlResult(this.state.currField)
       }
       if ( this.state.currField === 0 ) {
         nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
