@@ -31,22 +31,23 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange( event:{ target: { name: any; value: any; } } ):any {
-    
     if ( this.state.currField >= 3 ) {
-      if (isNaN(parseFloat(event.target.value))) {
-        this.setState( { [event.target.name]: event.target.value } as Pick<Istate, keyof Istate> ) // updates state for either height or weight 
-      } else {
-        const newState = { [event.target.name]: parseFloat(event.target.value) } as Pick<Istate, keyof Istate>;
-        this.setState( newState ) // updates state for either height or weight 
-      }
+      const newState = { [event.target.name]: (event.target.value) } as Istate;
+      this.setState( newState, () => {
+        const { height } = this.state 
+        const { weight } = this.state 
+        if (!invalidNumberValidation(height, weight)) {
+          this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
+        }
+      }) // updates state for either height or weight 
     } else if ( this.state.currField === 1 ) {
       this.setState( { name: event.target.value } ) // updates state only for name 
     }
     if ( this.state.currField === 2 && event.target.value === 'true' ) {
-      this.setState({ gender: event.target.value });
+      this.setState({ gender: true });
       this.setState({ genderSelected: true } )
     } else if ( this.state.currField === 2 && event.target.value === 'false' ) {
-      this.setState({ gender: event.target.value });
+      this.setState({ gender: false });
       this.setState({ genderSelected: true } )
     }
   } // end of onChange 
@@ -118,7 +119,8 @@ class App extends React.Component<{}, Istate> {
               {formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}:
             </label>
             <input 
-              type="text" 
+              type={ idx === 0 ? "text" : 'number'}
+              step={ idx !== 0 ? '0.01' : ''}
               name={`${formFields[idx]}`}
               placeholder={`${formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}`}
               onChange={this.onChange}
@@ -182,6 +184,8 @@ class App extends React.Component<{}, Istate> {
           nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
           prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
       } 
+      console.log('State:', this.state);
+      
       return ( // rendering happens here JSX 
           <div className="form-content-right">
               <form className="form">

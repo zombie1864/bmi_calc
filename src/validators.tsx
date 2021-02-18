@@ -29,6 +29,8 @@ export const invalidNumberValidation = (
     if (isNaN(heightNum) && height !== '') invalidNumber = true 
     if (weightNum < miniWeight || weightNum > maxWeight ) invalidNumber = true 
     if ( isNaN(weightNum) && weight !== '') invalidNumber = true
+    // console.log(invalidNumber);
+    
     return invalidNumber
 
 } // end of invalidNumberValidation
