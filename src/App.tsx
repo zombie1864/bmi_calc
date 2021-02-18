@@ -31,7 +31,7 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange( event:{ target: { name: any; value: any; } } ):any {
-    if ( this.state.currField >= 3 ) {
+    if ( this.state.currField >= 3) {
       const newState = { [event.target.name]: (event.target.value) } as Istate;
       this.setState( newState, () => {
         const { height } = this.state 
@@ -40,9 +40,8 @@ class App extends React.Component<{}, Istate> {
           this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
         }
       }) // updates state for either height or weight 
-    } else if ( this.state.currField === 1 ) {
-      this.setState( { name: event.target.value } ) // updates state only for name 
-    }
+    } 
+    if ( this.state.currField === 1 ) this.setState( { name: event.target.value } ) // updates state only for name 
     if ( this.state.currField === 2 && event.target.value === 'true' ) {
       this.setState({ gender: true });
       this.setState({ genderSelected: true } )
