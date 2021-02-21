@@ -3,7 +3,7 @@ import { invalidNameValidation, invalidNumberValidation } from './validators'
 
 interface Istate {
   name: string, 
-  gender: boolean, 
+  gender: string, 
   height: string, 
   weight: string,
   currField: number, 
@@ -16,7 +16,7 @@ class App extends React.Component<{}, Istate> {
       super(props);
       this.state = {
           name: '', 
-          gender: true, 
+          gender: 'notSelected', 
           height: '', 
           weight: '', 
           currField: 0, 
@@ -31,6 +31,8 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange( event:{ target: { name: any; value: any; } } ):any {
+    console.log('trg value is',event.target.value)
+    console.log('gender is', this.state.gender);
     if ( this.state.currField >= 3) {
       const newState = { [event.target.name]: (event.target.value) } as Istate;
       this.setState( newState, () => {
@@ -43,10 +45,10 @@ class App extends React.Component<{}, Istate> {
     } 
     if ( this.state.currField === 1 ) this.setState( { name: event.target.value } ) // updates state only for name 
     if ( this.state.currField === 2 && event.target.value === 'true' ) {
-      this.setState({ gender: true });
+      this.setState({ gender: 'true' });
       this.setState({ genderSelected: true } )
     } else if ( this.state.currField === 2 && event.target.value === 'false' ) {
-      this.setState({ gender: false });
+      this.setState({ gender: 'false' });
       this.setState({ genderSelected: true } )
     }
   } // end of onChange 
@@ -56,6 +58,11 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private handleOnClick = (event: any): void => { // onClicks have events 
+    // console.log(
+    //   ( this.state.currField === 2 && !this.state.genderSelected ),
+    //   ( this.state.currField === 3 && this.state.height <= '3.0' ), 
+    //   ( this.state.currField === 4 && this.state.weight  <= '60' )
+    // );
     if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
     if ( 
       ( this.state.allowNext === invalidNameValidation(this.state.name) ) ||
@@ -95,6 +102,7 @@ class App extends React.Component<{}, Istate> {
   private htmlResult(currField:number):any {
     const formFields = ['name', 'gender', 'height', 'weight']; 
     const genderTypes = [
+      { value: 'notSelected', label: '-- select an option --' },
       { value: 'true', label: 'Male' },
       { value: 'false', label: 'Female' }
     ]
@@ -106,8 +114,7 @@ class App extends React.Component<{}, Istate> {
             <label htmlFor="gender" className="form-label">
               Gender:
             </label>
-            <select name="gender" className="genderOpt" onChange={this.onChange}>
-              <option> -- select an option -- </option>
+            <select name="gender" className="genderOpt" onChange={this.onChange} value={this.state.gender}>
               {genderTypes.map(({ value, label }) => <option value={value}  key = { value }>{label}</option>)}
             </select>
           </div>    
