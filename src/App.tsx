@@ -166,10 +166,14 @@ class App extends React.Component<{}, Istate> {
       } else if ( this.state.currField === 5 ) { // review field and submit
           result = 
               <div>
-                  <p>Name: { this.state.name }</p>
-                  <p>Gender: { this.state.gender === 'true' ? 'Male' : 'Female'}</p>
-                  <p>Height: { this.state.height }</p>
-                  <p>Weight: { this.state.weight }</p>
+                {Object.entries(this.state).map( (keyValueArrPair, idx) => (
+                  <p key = { idx }>
+                    { idx > 3 ? '' : keyValueArrPair[0][0].toUpperCase() + keyValueArrPair[0].slice(1) + ': '}
+                    { keyValueArrPair[1] === 'true' ? 'Male' : 
+                      keyValueArrPair[1] === 'false' ? 'Female' : 
+                      idx > 3 ? '' : keyValueArrPair[1] }
+                  </p>
+                ))}
                   <p>congrates, your bmi is {this.bmiResult(parseFloat(this.state.height), parseFloat(this.state.weight))}</p>
               </div> 
       } else {
