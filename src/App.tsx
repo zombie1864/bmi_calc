@@ -162,6 +162,7 @@ class App extends React.Component<{}, Istate> {
                   <p>Greetings and welcome to BMI Calculator</p>
                   <p>Press next to enter your info to calcuate your bmi</p>
               </div>
+              nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
       } else if ( this.state.currField === 5 ) { // review field and submit
           result = 
               <div>
@@ -173,18 +174,9 @@ class App extends React.Component<{}, Istate> {
               </div> 
       } else {
         result = this.htmlResult(this.state.currField)
-      }
-      if ( this.state.currField === 0 ) {
         nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
-      } else if ( // shows btns based on currField 
-          this.state.currField === 1 || 
-          this.state.currField === 2 || 
-          this.state.currField === 3 || 
-          this.state.currField === 4 
-      ) {
-          nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
-          prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
-      } 
+        prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
+      }
 
       return ( // rendering happens here JSX 
           <div className="form-content-right">
