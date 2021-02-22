@@ -3,7 +3,7 @@ import { invalidNameValidation, invalidNumberValidation } from './validators'
 
 interface Istate {
   name: string, 
-  gender: boolean, 
+  gender: string, 
   height: string, 
   weight: string,
   currField: number, 
@@ -16,12 +16,12 @@ class App extends React.Component<{}, Istate> {
       super(props);
       this.state = {
           name: '', 
-          gender: true, 
+          gender: '', 
           height: '', 
           weight: '', 
           currField: 0, 
           allowNext: true, 
-          genderSelected: false
+          genderSelected: false 
       };
       this.onChange = this.onChange.bind(this); 
   }
@@ -36,17 +36,19 @@ class App extends React.Component<{}, Istate> {
       this.setState( newState, () => {
         const { height } = this.state 
         const { weight } = this.state 
-        if (!invalidNumberValidation(height, weight)) {
+        if ( isNaN(parseFloat(event.target.value)) ) {
+          return 
+        } else if (!invalidNumberValidation(height, weight)) {
           this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
         }
       }) // updates state for either height or weight 
     } 
     if ( this.state.currField === 1 ) this.setState( { name: event.target.value } ) // updates state only for name 
     if ( this.state.currField === 2 && event.target.value === 'true' ) {
-      this.setState({ gender: true });
+      this.setState({ gender: 'true' });
       this.setState({ genderSelected: true } )
     } else if ( this.state.currField === 2 && event.target.value === 'false' ) {
-      this.setState({ gender: false });
+      this.setState({ gender: 'false' });
       this.setState({ genderSelected: true } )
     }
   } // end of onChange 
@@ -78,11 +80,11 @@ class App extends React.Component<{}, Istate> {
     let errMsg
     if ( invalidNameValidation(this.state.name) ) {
       errMsg = <p>Please enter a valid name</p>
-    } else if (invalidNumberValidation((this.state.height), (this.state.weight))) {
-      errMsg =  <p>Please enter a valid height</p>
-    } else if (invalidNumberValidation((this.state.height), (this.state.weight))) {
-      errMsg =  <p>Please enter a valid weight</p>
-    }
+    } else if (invalidNumberValidation((this.state.height), (this.state.weight)) && this.state.currField === 3 ) {
+      errMsg =  <p>Please enter a valid height between 3.0 and 8.0 ft </p>
+    } else if (invalidNumberValidation((this.state.height), (this.state.weight)) && this.state.currField === 4 ) {
+      errMsg =  <p>Please enter a valid weight between 60 and 600 lbs</p>
+    } 
       return (
         errMsg
       )
@@ -95,6 +97,7 @@ class App extends React.Component<{}, Istate> {
   private htmlResult(currField:number):any {
     const formFields = ['name', 'gender', 'height', 'weight']; 
     const genderTypes = [
+      { value: 'notSelected', label: '-- select an option --' },
       { value: 'true', label: 'Male' },
       { value: 'false', label: 'Female' }
     ]
@@ -106,8 +109,7 @@ class App extends React.Component<{}, Istate> {
             <label htmlFor="gender" className="form-label">
               Gender:
             </label>
-            <select name="gender" className="genderOpt" onChange={this.onChange}>
-              <option> -- select an option -- </option>
+            <select name="gender" className="genderOpt" onChange={this.onChange} value={this.state.gender}>
               {genderTypes.map(({ value, label }) => <option value={value}  key = { value }>{label}</option>)}
             </select>
           </div>    
@@ -126,7 +128,7 @@ class App extends React.Component<{}, Istate> {
               value={ 
                 idx === 0 ? this.state.name : 
                 idx === 2 ? this.state.height :
-                this.state.weight 
+                this.state.weight
               }
               />
               { invalidNameValidation(this.state.name) ? 
@@ -164,7 +166,7 @@ class App extends React.Component<{}, Istate> {
           result = 
               <div>
                   <p>Name: { this.state.name }</p>
-                  <p>Gender: { this.state.gender ? 'Male' : 'Female'}</p>
+                  <p>Gender: { this.state.gender === 'true' ? 'Male' : 'Female'}</p>
                   <p>Height: { this.state.height }</p>
                   <p>Weight: { this.state.weight }</p>
                   <p>congrates, your bmi is {this.bmiResult(parseFloat(this.state.height), parseFloat(this.state.weight))}</p>
@@ -183,6 +185,7 @@ class App extends React.Component<{}, Istate> {
           nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
           prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
       } 
+
       return ( // rendering happens here JSX 
           <div className="form-content-right">
               <form className="form">

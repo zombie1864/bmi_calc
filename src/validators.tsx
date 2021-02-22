@@ -19,7 +19,6 @@ export const invalidNumberValidation = (
     miniWeight:number = 60, 
     maxWeight:number = 600
   ): boolean => { // aux method 
-    // console.log(height, weight);
     
     let invalidNumber = false 
     if (height === '' || weight === '') invalidNumber = false 
@@ -29,7 +28,6 @@ export const invalidNumberValidation = (
     if (isNaN(heightNum) && height !== '') invalidNumber = true 
     if (weightNum < miniWeight || weightNum > maxWeight ) invalidNumber = true 
     if ( isNaN(weightNum) && weight !== '') invalidNumber = true
-    // console.log(invalidNumber);
     
     return invalidNumber
 
