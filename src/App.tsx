@@ -8,7 +8,8 @@ interface Istate {
   weight: string,
   currField: number, 
   allowNext: boolean, 
-  genderSelected: boolean
+  genderSelected: boolean, 
+  nonNumericValue: boolean
 }
 
 class App extends React.Component<{}, Istate> { 
@@ -21,7 +22,8 @@ class App extends React.Component<{}, Istate> {
           weight: '', 
           currField: 0, 
           allowNext: true, 
-          genderSelected: false
+          genderSelected: false, 
+          nonNumericValue: false 
       };
       this.onChange = this.onChange.bind(this); 
   }
@@ -31,15 +33,19 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange( event:{ target: { name: any; value: any; } } ):any {
+    // console.log(event.target.value);
     if ( this.state.currField >= 3) {
       const newState = { [event.target.name]: (event.target.value) } as Istate;
       this.setState( newState, () => {
         const { height } = this.state 
         const { weight } = this.state 
         if ( isNaN(parseFloat(event.target.value)) ) {
+          // console.log('isNaN is Hit');
+          this.setState( { nonNumericValue: true } )
           return 
         } else if (!invalidNumberValidation(height, weight)) {
           this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
+          // console.log('!invalidNumberValidation is Hit');
         }
       }) // updates state for either height or weight 
     } 
@@ -80,10 +86,12 @@ class App extends React.Component<{}, Istate> {
     let errMsg
     if ( invalidNameValidation(this.state.name) ) {
       errMsg = <p>Please enter a valid name</p>
-    } else if (invalidNumberValidation((this.state.height), (this.state.weight))) {
-      errMsg =  <p>Please enter a valid height</p>
-    } else if (invalidNumberValidation((this.state.height), (this.state.weight))) {
-      errMsg =  <p>Please enter a valid weight</p>
+    } else if (invalidNumberValidation((this.state.height), (this.state.weight)) && this.state.currField === 3 ) {
+      errMsg =  <p>Please enter a valid height between 3.0 and 8.0 ft </p>
+    } else if (invalidNumberValidation((this.state.height), (this.state.weight)) && this.state.currField === 4 ) {
+      errMsg =  <p>Please enter a valid weight between 60 and 600 lbs</p>
+    } else if ( this.state.nonNumericValue ) {
+      errMsg = <p>non-numeric value. Please enter a numeric value</p>
     }
       return (
         errMsg
@@ -166,7 +174,7 @@ class App extends React.Component<{}, Istate> {
           result = 
               <div>
                   <p>Name: { this.state.name }</p>
-                  <p>Gender: { this.state.gender ? 'Male' : 'Female'}</p>
+                  <p>Gender: { this.state.gender === 'true' ? 'Male' : 'Female'}</p>
                   <p>Height: { this.state.height }</p>
                   <p>Weight: { this.state.weight }</p>
                   <p>congrates, your bmi is {this.bmiResult(parseFloat(this.state.height), parseFloat(this.state.weight))}</p>
@@ -185,8 +193,7 @@ class App extends React.Component<{}, Istate> {
           nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
           prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
       } 
-      console.log(this.state);
-      
+
       return ( // rendering happens here JSX 
           <div className="form-content-right">
               <form className="form">
