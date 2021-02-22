@@ -16,7 +16,7 @@ class App extends React.Component<{}, Istate> {
       super(props);
       this.state = {
           name: '', 
-          gender: 'notSelected', 
+          gender: '', 
           height: '', 
           weight: '', 
           currField: 0, 
@@ -31,14 +31,14 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange( event:{ target: { name: any; value: any; } } ):any {
-    console.log('trg value is',event.target.value)
-    console.log('gender is', this.state.gender);
     if ( this.state.currField >= 3) {
       const newState = { [event.target.name]: (event.target.value) } as Istate;
       this.setState( newState, () => {
         const { height } = this.state 
         const { weight } = this.state 
-        if (!invalidNumberValidation(height, weight)) {
+        if ( isNaN(parseFloat(event.target.value)) ) {
+          return 
+        } else if (!invalidNumberValidation(height, weight)) {
           this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
         }
       }) // updates state for either height or weight 
@@ -58,11 +58,6 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private handleOnClick = (event: any): void => { // onClicks have events 
-    // console.log(
-    //   ( this.state.currField === 2 && !this.state.genderSelected ),
-    //   ( this.state.currField === 3 && this.state.height <= '3.0' ), 
-    //   ( this.state.currField === 4 && this.state.weight  <= '60' )
-    // );
     if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
     if ( 
       ( this.state.allowNext === invalidNameValidation(this.state.name) ) ||
@@ -133,7 +128,7 @@ class App extends React.Component<{}, Istate> {
               value={ 
                 idx === 0 ? this.state.name : 
                 idx === 2 ? this.state.height :
-                this.state.weight 
+                this.state.weight
               }
               />
               { invalidNameValidation(this.state.name) ? 
@@ -190,6 +185,8 @@ class App extends React.Component<{}, Istate> {
           nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
           prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
       } 
+      console.log(this.state);
+      
       return ( // rendering happens here JSX 
           <div className="form-content-right">
               <form className="form">
