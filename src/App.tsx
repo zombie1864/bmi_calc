@@ -8,8 +8,7 @@ interface Istate {
   weight: string,
   currField: number, 
   allowNext: boolean, 
-  genderSelected: boolean, 
-  nonNumericValue: boolean
+  genderSelected: boolean
 }
 
 class App extends React.Component<{}, Istate> { 
@@ -22,8 +21,7 @@ class App extends React.Component<{}, Istate> {
           weight: '', 
           currField: 0, 
           allowNext: true, 
-          genderSelected: false, 
-          nonNumericValue: false 
+          genderSelected: false 
       };
       this.onChange = this.onChange.bind(this); 
   }
@@ -33,19 +31,15 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange( event:{ target: { name: any; value: any; } } ):any {
-    // console.log(event.target.value);
     if ( this.state.currField >= 3) {
       const newState = { [event.target.name]: (event.target.value) } as Istate;
       this.setState( newState, () => {
         const { height } = this.state 
         const { weight } = this.state 
         if ( isNaN(parseFloat(event.target.value)) ) {
-          // console.log('isNaN is Hit');
-          this.setState( { nonNumericValue: true } )
           return 
         } else if (!invalidNumberValidation(height, weight)) {
           this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
-          // console.log('!invalidNumberValidation is Hit');
         }
       }) // updates state for either height or weight 
     } 
@@ -90,9 +84,7 @@ class App extends React.Component<{}, Istate> {
       errMsg =  <p>Please enter a valid height between 3.0 and 8.0 ft </p>
     } else if (invalidNumberValidation((this.state.height), (this.state.weight)) && this.state.currField === 4 ) {
       errMsg =  <p>Please enter a valid weight between 60 and 600 lbs</p>
-    } else if ( this.state.nonNumericValue ) {
-      errMsg = <p>non-numeric value. Please enter a numeric value</p>
-    }
+    } 
       return (
         errMsg
       )
