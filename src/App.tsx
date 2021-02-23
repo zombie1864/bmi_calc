@@ -30,27 +30,20 @@ class App extends React.Component<{}, Istate> {
 // -----------------------------[ EVENT HANDLERS ]-----------------------------
 /*****************************************************************************/
 
-  private onChange( event:{ target: { name: any; value: any; } } ):any {
-    if ( this.state.currField >= 3) {
-      const newState = { [event.target.name]: (event.target.value) } as Istate;
-      this.setState( newState, () => {
-        const { height } = this.state 
-        const { weight } = this.state 
-        if ( isNaN(parseFloat(event.target.value)) ) {
-          return 
-        } else if (!invalidNumberValidation(height, weight)) {
-          this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
-        }
-      }) // updates state for either height or weight 
-    } 
-    if ( this.state.currField === 1 ) this.setState( { name: event.target.value } ) // updates state only for name 
-    if ( this.state.currField === 2 && event.target.value === 'true' ) {
-      this.setState({ gender: 'true' });
-      this.setState({ genderSelected: true } )
-    } else if ( this.state.currField === 2 && event.target.value === 'false' ) {
-      this.setState({ gender: 'false' });
-      this.setState({ genderSelected: true } )
-    }
+  private onChange( event:{ target: { name: any; value: any; } } ):void {    
+    const newState = { [event.target.name]: (event.target.value) } as Istate;
+    this.setState( newState, () => { // cb func -> does further logic regarding on trg value 
+      const { height } = this.state 
+      const { weight } = this.state 
+      if ( event.target.value === 'true' || event.target.value === 'false' ) {
+        this.setState({ genderSelected: true } )
+      }
+      if ( isNaN(parseFloat(event.target.value)) ) { // this is triggered for either type of input 
+        return // if type={number} the effect is to return '' from value={this.state.height} 
+      } else if (!invalidNumberValidation(height, weight)) {
+        this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
+      }
+    }) 
   } // end of onChange 
   
 /*****************************************************************************/
@@ -164,10 +157,10 @@ class App extends React.Component<{}, Istate> {
               </div>
               nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
       } else if ( this.state.currField === 5 ) { // review field and submit
-          result = 
+          result = // generates the p tags on the result section 
               <div>
                 {Object.entries(this.state).map( (keyValueArrPair, idx) => (
-                  <p key = { idx }>
+                  <p key = { idx }> 
                     { idx > 3 ? '' : keyValueArrPair[0][0].toUpperCase() + keyValueArrPair[0].slice(1) + ': '}
                     { keyValueArrPair[1] === 'true' ? 'Male' : 
                       keyValueArrPair[1] === 'false' ? 'Female' : 
@@ -181,7 +174,7 @@ class App extends React.Component<{}, Istate> {
         nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
         prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
       }
-
+      console.log(this.state);
       return ( // rendering happens here JSX 
           <div className="form-content-right">
               <form className="form">
