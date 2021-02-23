@@ -35,9 +35,7 @@ class App extends React.Component<{}, Istate> {
     this.setState( newState, () => { // cb func -> does further logic regarding on trg value 
       const { height } = this.state 
       const { weight } = this.state 
-      if ( event.target.value === 'true' || event.target.value === 'false' ) {
-        this.setState({ genderSelected: true } )
-      }
+      if ( event.target.value === 'true' || event.target.value === 'false' ) this.setState({ genderSelected: true } )
       if ( isNaN(parseFloat(event.target.value)) ) { // this is triggered for either type of input 
         return // if type={number} the effect is to return '' from value={this.state.height} 
       } else if (!invalidNumberValidation(height, weight)) {
