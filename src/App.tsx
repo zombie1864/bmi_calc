@@ -7,7 +7,6 @@ interface Istate {
   height: string, 
   weight: string,
   currField: number, 
-  allowNext: boolean, 
   genderSelected: boolean
 }
 
@@ -20,7 +19,6 @@ class App extends React.Component<{}, Istate> {
           height: '', 
           weight: '', 
           currField: 0, 
-          allowNext: true, 
           genderSelected: false 
       };
       this.onChange = this.onChange.bind(this); 
@@ -48,19 +46,16 @@ class App extends React.Component<{}, Istate> {
 // ---------------------------------[ BTNS ]---------------------------------
 /*****************************************************************************/
 
-  private handleOnClick = (event: any): void => { // onClicks have events 
-    if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
-    if ( 
-      ( this.state.allowNext === invalidNameValidation(this.state.name) ) ||
-      ( this.state.allowNext ===  invalidNumberValidation( 
-        (this.state.height), (this.state.weight) 
-      ) && this.state.currField === 3 ) || 
-      ( this.state.currField === 1 && this.state.name === '' ) || 
-      ( this.state.currField === 2 && !this.state.genderSelected ) ||
-      ( this.state.currField === 3 && this.state.height <= '' )|| 
-      ( this.state.currField === 4 && this.state.weight  <= '' )
-    ) return 
-    if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )
+private handleOnClick = (event: any): void => { // onClicks have events 
+  if (invalidNameValidation(this.state.name) || invalidNumberValidation(this.state.height, this.state.weight)) return 
+  if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
+  if ( 
+    ( this.state.currField === 1 && this.state.name === '' ) || 
+    ( this.state.currField === 2 && !this.state.genderSelected ) ||
+    ( this.state.currField === 3 && this.state.height === '' )|| 
+    ( this.state.currField === 4 && this.state.weight  === '' )
+  ) return 
+  if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )
   } // end of handleNxt 
 
 /*****************************************************************************/
