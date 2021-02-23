@@ -95,7 +95,7 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private htmlResult(currField:number):any {
-    const formFields = ['name', 'gender', 'height', 'weight']; 
+    const formFields = Object.keys(this.state)
     const genderTypes = [
       { value: 'notSelected', label: '-- select an option --' },
       { value: 'true', label: 'Male' },
