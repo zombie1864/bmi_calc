@@ -57,8 +57,8 @@ class App extends React.Component<{}, Istate> {
       ) && this.state.currField === 3 ) || 
       ( this.state.currField === 1 && this.state.name === '' ) || 
       ( this.state.currField === 2 && !this.state.genderSelected ) ||
-      ( this.state.currField === 3 && this.state.height <= '3.0' )|| 
-      ( this.state.currField === 4 && this.state.weight  <= '60' )
+      ( this.state.currField === 3 && this.state.height <= '' )|| 
+      ( this.state.currField === 4 && this.state.weight  <= '' )
     ) return 
     if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )
   } // end of handleNxt 
