@@ -7,69 +7,54 @@ interface Istate {
   height: string, 
   weight: string,
   currField: number, 
-  allowNext: boolean, 
   genderSelected: boolean
 }
 
 class App extends React.Component<{}, Istate> { 
   public constructor(props: Istate) {
-      super(props);
-      this.state = {
-          name: '', 
-          gender: '', 
-          height: '', 
-          weight: '', 
-          currField: 0, 
-          allowNext: true, 
-          genderSelected: false 
-      };
-      this.onChange = this.onChange.bind(this); 
-  }
-
+    super(props);
+    this.state = {
+        name: '', 
+        gender: '', 
+        height: '', 
+        weight: '', 
+        currField: 0, 
+        genderSelected: false 
+    };
+}
+ 
 /*****************************************************************************/
 // -----------------------------[ EVENT HANDLERS ]-----------------------------
 /*****************************************************************************/
 
-  private onChange( event:{ target: { name: any; value: any; } } ):any {
-    if ( this.state.currField >= 3) {
-      const newState = { [event.target.name]: (event.target.value) } as Istate;
-      this.setState( newState, () => {
-        const { height } = this.state 
-        const { weight } = this.state 
-        if ( isNaN(parseFloat(event.target.value)) ) {
-          return 
-        } else if (!invalidNumberValidation(height, weight)) {
-          this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
-        }
-      }) // updates state for either height or weight 
-    } 
-    if ( this.state.currField === 1 ) this.setState( { name: event.target.value } ) // updates state only for name 
-    if ( this.state.currField === 2 && event.target.value === 'true' ) {
-      this.setState({ gender: 'true' });
-      this.setState({ genderSelected: true } )
-    } else if ( this.state.currField === 2 && event.target.value === 'false' ) {
-      this.setState({ gender: 'false' });
-      this.setState({ genderSelected: true } )
-    }
+  private onChange = ( event:{ target: { name: any; value: any; } } ):void => { 
+    const newState = { [event.target.name]: (event.target.value) } as Istate;
+    this.setState( newState, () => { // cb func -> does further logic regarding on trg value 
+      const { height } = this.state 
+      const { weight } = this.state 
+      if ( event.target.value === 'true' || event.target.value === 'false' ) this.setState({ genderSelected: true } )
+      if ( isNaN(parseFloat(event.target.value)) ) { // this is triggered for either type of input 
+        return // if type={number} the effect is to return '' from value={this.state.height} 
+      } else if (!invalidNumberValidation(height, weight)) {
+        this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
+      }
+    }) 
   } // end of onChange 
   
 /*****************************************************************************/
 // ---------------------------------[ BTNS ]---------------------------------
 /*****************************************************************************/
 
-  private handleOnClick = (event: any): void => { // onClicks have events 
-    if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
-    if ( 
-      ( this.state.allowNext === invalidNameValidation(this.state.name) ) ||
-      ( this.state.allowNext ===  invalidNumberValidation( 
-        (this.state.height), (this.state.weight) 
-      ) && this.state.currField === 3 ) || 
-      ( this.state.currField === 1 && this.state.name === '' ) || 
-      ( this.state.currField === 2 && !this.state.genderSelected ) ||
-      ( this.state.currField === 3 && this.state.height <= '3.0' )|| 
-      ( this.state.currField === 4 && this.state.weight  <= '60' )
-    ) return 
-    if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )
+private handleOnClick = (event: any): void => { // onClicks have events 
+  if (invalidNameValidation(this.state.name) || invalidNumberValidation(this.state.height, this.state.weight)) return 
+  if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
+  if ( 
+    ( this.state.currField === 1 && this.state.name === '' ) || 
+    ( this.state.currField === 2 && !this.state.genderSelected ) ||
+    ( this.state.currField === 3 && this.state.height === '' )|| 
+    ( this.state.currField === 4 && this.state.weight  === '' )
+  ) return 
+  if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )
   } // end of handleNxt 
 
 /*****************************************************************************/
@@ -95,7 +80,7 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private htmlResult(currField:number):any {
-    const formFields = ['name', 'gender', 'height', 'weight']; 
+    const formFields = Object.keys(this.state)
     const genderTypes = [
       { value: 'notSelected', label: '-- select an option --' },
       { value: 'true', label: 'Male' },
@@ -142,7 +127,7 @@ class App extends React.Component<{}, Istate> {
   }
 
   private bmiResult(height:number, weight:number):number {
-    return 703 * ( ( weight) / ( (12 * height) ** 2 ) )
+    return Math.round( 703 * ( ( weight) / ( (12 * height) ** 2 ) ) ) 
   }
 
 /*****************************************************************************/
@@ -162,29 +147,25 @@ class App extends React.Component<{}, Istate> {
                   <p>Greetings and welcome to BMI Calculator</p>
                   <p>Press next to enter your info to calcuate your bmi</p>
               </div>
+              nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
       } else if ( this.state.currField === 5 ) { // review field and submit
-          result = 
+          result = // generates the p tags on the result section 
               <div>
-                  <p>Name: { this.state.name }</p>
-                  <p>Gender: { this.state.gender === 'true' ? 'Male' : 'Female'}</p>
-                  <p>Height: { this.state.height }</p>
-                  <p>Weight: { this.state.weight }</p>
+                {Object.entries(this.state).map( (keyValueArrPair, idx) => (
+                  <p key = { idx }> 
+                    { idx > 3 ? '' : keyValueArrPair[0][0].toUpperCase() + keyValueArrPair[0].slice(1) + ': '}
+                    { keyValueArrPair[1] === 'true' ? 'Male' : 
+                      keyValueArrPair[1] === 'false' ? 'Female' : 
+                      idx > 3 ? '' : keyValueArrPair[1] }
+                  </p>
+                ))}
                   <p>congrates, your bmi is {this.bmiResult(parseFloat(this.state.height), parseFloat(this.state.weight))}</p>
               </div> 
       } else {
         result = this.htmlResult(this.state.currField)
-      }
-      if ( this.state.currField === 0 ) {
         nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
-      } else if ( // shows btns based on currField 
-          this.state.currField === 1 || 
-          this.state.currField === 2 || 
-          this.state.currField === 3 || 
-          this.state.currField === 4 
-      ) {
-          nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
-          prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
-      } 
+        prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
+      }
 
       return ( // rendering happens here JSX 
           <div className="form-content-right">
