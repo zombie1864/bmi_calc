@@ -24,7 +24,7 @@ class App extends React.Component<{}, Istate> {
 // -----------------------------[ EVENT HANDLERS ]-----------------------------
 /*****************************************************************************/
 
-  private onChange = ( event:{ target: { name: any; value: any; } } ):void => { // see why arrow fuc works w.o bind 
+  private onChange = ( event:{ target: { name: any; value: any; } } ):void => { 
     const newState = { [event.target.name]: (event.target.value) } as Istate;
     this.setState( newState, () => { // cb func -> does further logic regarding on trg value 
       const { height } = this.state 
@@ -163,7 +163,7 @@ private handleOnClick = (event: any): void => { // onClicks have events
         nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
         prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
       }
-      console.log(this.state);
+
       return ( // rendering happens here JSX 
           <div className="form-content-right">
               <form className="form">
