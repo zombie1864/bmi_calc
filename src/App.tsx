@@ -128,7 +128,7 @@ private handleOnClick = (event: any): void => { // onClicks have events
   }
 
   private bmiResult(height:number, weight:number):number {
-    return 703 * ( ( weight) / ( (12 * height) ** 2 ) )
+    return Math.round( 703 * ( ( weight) / ( (12 * height) ** 2 ) ) ) 
   }
 
 /*****************************************************************************/
