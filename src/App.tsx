@@ -11,14 +11,17 @@ interface Istate {
 }
 
 class App extends React.Component<{}, Istate> { 
-  state = {
-    name: '', 
-    gender: '', 
-    height: '', 
-    weight: '', 
-    currField: 0, 
-    genderSelected: false 
-  };
+  public constructor(props: Istate) {
+    super(props);
+    this.state = {
+        name: '', 
+        gender: '', 
+        height: '', 
+        weight: '', 
+        currField: 0, 
+        genderSelected: false 
+    };
+}
  
 /*****************************************************************************/
 // -----------------------------[ EVENT HANDLERS ]-----------------------------
