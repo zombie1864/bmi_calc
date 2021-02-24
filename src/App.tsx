@@ -11,24 +11,20 @@ interface Istate {
 }
 
 class App extends React.Component<{}, Istate> { 
-  public constructor(props: Istate) {
-      super(props);
-      this.state = {
-          name: '', 
-          gender: '', 
-          height: '', 
-          weight: '', 
-          currField: 0, 
-          genderSelected: false 
-      };
-      this.onChange = this.onChange.bind(this); 
-  }
-
+  state = {
+    name: '', 
+    gender: '', 
+    height: '', 
+    weight: '', 
+    currField: 0, 
+    genderSelected: false 
+  };
+ 
 /*****************************************************************************/
 // -----------------------------[ EVENT HANDLERS ]-----------------------------
 /*****************************************************************************/
 
-  private onChange( event:{ target: { name: any; value: any; } } ):void {    
+  private onChange = ( event:{ target: { name: any; value: any; } } ):void => { // see why arrow fuc works w.o bind 
     const newState = { [event.target.name]: (event.target.value) } as Istate;
     this.setState( newState, () => { // cb func -> does further logic regarding on trg value 
       const { height } = this.state 
