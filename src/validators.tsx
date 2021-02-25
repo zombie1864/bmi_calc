@@ -21,6 +21,7 @@ export const invalidNumberValidation = (
   ): boolean => { // aux method 
     
     let invalidNumber = false 
+    
     if (height === '' || weight === '') invalidNumber = false 
     let heightNum = parseFloat(height), 
         weightNum = parseFloat(weight)
