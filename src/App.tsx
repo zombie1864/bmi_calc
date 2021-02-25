@@ -2,10 +2,14 @@ import React from 'react'
 import { invalidNameValidation, invalidNumberValidation } from './validators'
 
 interface Istate {
-  name: string, 
-  gender: string, 
-  height: string, 
-  weight: string,
+  formFields: 
+    {
+      name: string, 
+      gender: string, 
+      height: string, 
+      weight: string
+    }[]
+  , 
   currField: number, 
   genderSelected: boolean
 }
@@ -14,10 +18,14 @@ class App extends React.Component<{}, Istate> {
   public constructor(props: Istate) {
     super(props);
     this.state = {
+      formFields: [ 
+        {
         name: '', 
         gender: '', 
         height: '', 
-        weight: '', 
+        weight: '' 
+        }
+      ],
         currField: 0, 
         genderSelected: false 
     };
@@ -28,14 +36,13 @@ class App extends React.Component<{}, Istate> {
 /*****************************************************************************/
 
   private onChange = ( event:{ target: { name: any; value: any; } } ):void => { 
-    const newState = { [event.target.name]: (event.target.value) } as Istate;
-    this.setState( newState, () => { // cb func -> does further logic regarding on trg value 
-      const { height } = this.state 
-      const { weight } = this.state 
+    const newArr = [...this.state.formFields] // newState = { [event.target.name]: (event.target.value) } as Istate;
+    newArr[0] = { ...newArr[0], [event.target.name]: (event.target.value) }
+    this.setState( { formFields: newArr}, () => { // cb func -> does further logic regarding on trg value 
       if ( event.target.value === 'true' || event.target.value === 'false' ) this.setState({ genderSelected: true } )
       if ( isNaN(parseFloat(event.target.value)) ) { // this is triggered for either type of input 
         return // if type={number} the effect is to return '' from value={this.state.height} 
-      } else if (!invalidNumberValidation(height, weight)) {
+      } else if (!invalidNumberValidation(this.state.formFields[0].height, this.state.formFields[0].weight)) {
         this.setState( {[event.target.name]: parseFloat(event.target.value)} as Pick<Istate, keyof Istate>)
       }
     }) 
@@ -45,14 +52,14 @@ class App extends React.Component<{}, Istate> {
 // ---------------------------------[ BTNS ]---------------------------------
 /*****************************************************************************/
 
-private handleOnClick = (event: any): void => { // onClicks have events 
-  if (invalidNameValidation(this.state.name) || invalidNumberValidation(this.state.height, this.state.weight)) return 
+private handleOnClick = (event: any): void => { // onClicks have events   
+  if (invalidNameValidation(this.state.formFields[0].name) || invalidNumberValidation(this.state.formFields[0].height, this.state.formFields[0].weight)) return 
   if (event.target.value === 'back') this.setState( {currField: this.state.currField - 1 } ) 
   if ( 
-    ( this.state.currField === 1 && this.state.name === '' ) || 
+    ( this.state.currField === 1 && this.state.formFields[0].name === '' ) || 
     ( this.state.currField === 2 && !this.state.genderSelected ) ||
-    ( this.state.currField === 3 && this.state.height === '' )|| 
-    ( this.state.currField === 4 && this.state.weight  === '' )
+    ( this.state.currField === 3 && this.state.formFields[0].height === '' )|| 
+    ( this.state.currField === 4 && this.state.formFields[0].weight  === '' )
   ) return 
   if (event.target.value === 'nxt') this.setState( {currField: this.state.currField + 1 } )
   } // end of handleNxt 
@@ -63,11 +70,11 @@ private handleOnClick = (event: any): void => { // onClicks have events
 
   private renderErrors():any { // renders err
     let errMsg
-    if ( invalidNameValidation(this.state.name) ) {
+    if ( invalidNameValidation(this.state.formFields[0].name) ) {
       errMsg = <p>Please enter a valid name</p>
-    } else if (invalidNumberValidation((this.state.height), (this.state.weight)) && this.state.currField === 3 ) {
+    } else if (invalidNumberValidation(this.state.formFields[0].height, this.state.formFields[0].weight) && this.state.currField === 3 ) {
       errMsg =  <p>Please enter a valid height between 3.0 and 8.0 ft </p>
-    } else if (invalidNumberValidation((this.state.height), (this.state.weight)) && this.state.currField === 4 ) {
+    } else if (invalidNumberValidation(this.state.formFields[0].height, this.state.formFields[0].weight) && this.state.currField === 4 ) {
       errMsg =  <p>Please enter a valid weight between 60 and 600 lbs</p>
     } 
       return (
@@ -80,7 +87,7 @@ private handleOnClick = (event: any): void => { // onClicks have events
 /*****************************************************************************/
 
   private htmlResult(currField:number):any {
-    const formFields = Object.keys(this.state)
+    const formFields = Object.keys(this.state.formFields[0])
     const genderTypes = [
       { value: 'notSelected', label: '-- select an option --' },
       { value: 'true', label: 'Male' },
@@ -94,7 +101,7 @@ private handleOnClick = (event: any): void => { // onClicks have events
             <label htmlFor="gender" className="form-label">
               Gender:
             </label>
-            <select name="gender" className="genderOpt" onChange={this.onChange} value={this.state.gender}>
+            <select name="gender" className="genderOpt" onChange={this.onChange} value={this.state.formFields[0].gender}>
               {genderTypes.map(({ value, label }) => <option value={value}  key = { value }>{label}</option>)}
             </select>
           </div>    
@@ -111,14 +118,14 @@ private handleOnClick = (event: any): void => { // onClicks have events
               placeholder={`${formFields[idx][0].toUpperCase() + formFields[idx].slice(1,formFields[idx].length)}`}
               onChange={this.onChange}
               value={ 
-                idx === 0 ? this.state.name : 
-                idx === 2 ? this.state.height :
-                this.state.weight
+                idx === 0 ? this.state.formFields[0].name : 
+                idx === 2 ? this.state.formFields[0].height :
+                this.state.formFields[0].weight
               }
               />
-              { invalidNameValidation(this.state.name) ? 
+              { invalidNameValidation(this.state.formFields[0].name) ? 
               <div>{ this.renderErrors() }</div> 
-              : invalidNumberValidation((this.state.height), (this.state.weight)) ?
+              : invalidNumberValidation(this.state.formFields[0].height, this.state.formFields[0].weight) ?
               <div>{this.renderErrors()}</div> 
               : <div></div>}
           </div>
@@ -151,22 +158,22 @@ private handleOnClick = (event: any): void => { // onClicks have events
       } else if ( this.state.currField === 5 ) { // review field and submit
           result = // generates the p tags on the result section 
               <div>
-                {Object.entries(this.state).map( (keyValueArrPair, idx) => (
+                {Object.entries(this.state.formFields[0]).map( (keyValueArrPair, idx) => (
                   <p key = { idx }> 
-                    { idx > 3 ? '' : keyValueArrPair[0][0].toUpperCase() + keyValueArrPair[0].slice(1) + ': '}
+                    {keyValueArrPair[0][0].toUpperCase() + keyValueArrPair[0].slice(1) + ': '}
                     { keyValueArrPair[1] === 'true' ? 'Male' : 
                       keyValueArrPair[1] === 'false' ? 'Female' : 
-                      idx > 3 ? '' : keyValueArrPair[1] }
+                      keyValueArrPair[1] }
                   </p>
                 ))}
-                  <p>congrates, your bmi is {this.bmiResult(parseFloat(this.state.height), parseFloat(this.state.weight))}</p>
+                  <p>congrates, your bmi is {this.bmiResult(parseFloat(this.state.formFields[0].height), parseFloat(this.state.formFields[0].weight))}</p>
               </div> 
       } else {
         result = this.htmlResult(this.state.currField)
         nxtBtn = <button name="currField" value="nxt" onClick={this.handleOnClick}>Next</button>
         prevBtn = <button name="currField" value="back" onClick={this.handleOnClick}>Back</button>
       }
-
+      
       return ( // rendering happens here JSX 
           <div className="form-content-right">
               <form className="form">
