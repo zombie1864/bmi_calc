@@ -30,12 +30,14 @@ class App extends React.Component<{}, Istate> {
         genderSelected: false 
     };
 }
- 
+
+// in the future invalidNumberValidation should accept a single arg 
+
 /*****************************************************************************/
 // -----------------------------[ EVENT HANDLERS ]-----------------------------
 /*****************************************************************************/
 
-  private onChange = ( event:{ target: { name: any; value: any; } } ):void => { 
+  private onChange = ( event:any ):void => { 
     const newArr = [...this.state.formFields] // newState = { [event.target.name]: (event.target.value) } as Istate;
     newArr[0] = { ...newArr[0], [event.target.name]: (event.target.value) }
     this.setState( { formFields: newArr}, () => { // cb func -> does further logic regarding on trg value 
